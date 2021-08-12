@@ -4,10 +4,10 @@ import {StyleSheet, Text, View } from "react-native";
 
 import colours from '../config/colours';
 
-const RecommendationsScreen = () => {
+const ProfileScreen = () => {
     return (
         <View style={styles.container}>
-            <Text>Popcorn Buddies RecommendationsScreen</Text>
+            <Text>Popcorn Buddies ProfileScreen</Text>
             <StatusBar style="auto" />
         </View>
 
@@ -16,7 +16,7 @@ const RecommendationsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colours.primary,
+        backgroundColor: '#353',
         alignItems: 'center',
         justifyContent: 'center',
       },
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
 
 
 
-export default RecommendationsScreen;
+export default ProfileScreen;

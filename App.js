@@ -1,14 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import RecommendationsScreen from './app/screens/RecommendationsScreen';
+import ProfileScreen from './app/screens/ProfileScreen';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
   return (
-    <RecommendationsScreen></RecommendationsScreen>
+    <Tab.Navigator>
+      <Tab.Screen name="Recommendations" component={RecommendationsScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
+}
