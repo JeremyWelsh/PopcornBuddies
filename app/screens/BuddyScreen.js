@@ -16,7 +16,7 @@ const BuddyScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colours.primary,
+        backgroundColor: '#909',
         alignItems: 'center',
         justifyContent: 'center',
       },

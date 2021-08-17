@@ -16,7 +16,7 @@ const AddReviewScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colours.primary,
+        backgroundColor: "#606",
         alignItems: 'center',
         justifyContent: 'center',
       },
