@@ -10,6 +10,12 @@ import SearchScreen from './app/screens/SearchScreen';
 
 const Tab = createBottomTabNavigator();
 
+const tabScreenStyle = {
+  headerStyle: { backgroundColor: "#900" }, // header colour
+  headerTitleStyle: { color: "blue" }, // title will be blue
+  headerTintColor: "white", // any icons will be white in header
+};
+
 function MyTabs() {
   return (
     <Tab.Navigator>
