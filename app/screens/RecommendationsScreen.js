@@ -8,7 +8,7 @@ const RecommendationsScreen = () => {
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies RecommendationsScreen</Text>
-            <StatusBar style="auto" />
+            <StatusBar style="auto" flex="1" />
         </View>
 
     );
