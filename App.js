@@ -10,6 +10,8 @@ import SearchScreen from './app/screens/SearchScreen';
 
 const Tab = createBottomTabNavigator();
 
+const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
+
 const tabScreenStyle = {
   headerStyle: { backgroundColor: "#900" }, // header colour
   headerTitleStyle: { color: "blue" }, // title will be blue
