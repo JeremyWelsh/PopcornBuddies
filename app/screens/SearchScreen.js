@@ -42,7 +42,7 @@ const SearchScreen = () => {
     }, []);
 
     const renderItem = ({ item }) => {
-      const backgroundColor = item.id === selectedId ? "#6e3b6e" : "#f9c2ff";
+      const backgroundColor = item.id === selectedId ? "#7BAE7F" : "#95D7AE";
       const color = item.id === selectedId ? 'white' : 'black';
       return (
         <Item
@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
       },
       */
       container: {
+        backgroundColor: '#EEE0CB',
         flex: 1,
         marginTop: StatusBar.currentHeight || 0,
       },
