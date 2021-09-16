@@ -1,25 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from "react-native";
+import { Input } from 'react-native-elements';
+import { Button } from 'react-native-elements/dist/buttons/Button';
 
 //import colours from '../config/colours';
 
 const LoginScreen = () => {
+    const[email, setEmail] = useState("");
+    const[password, setPassword] = useState("");
+    const signIn = () => {
+
+    }
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView style={styles.container}>
             <Text>Popcorn Buddies LoginScreen</Text>
             <StatusBar style="auto" />
-        </View>
+            <View style={styles.inputView}>
+                <Input
+                    placeholder="Email"
+                    autoFocus
+                    type="email"
+                    value={email}
+                    onChangeText={(text)=>setEmail(text)}
+                />
+                <Input
+                    placeholder="Password"
+                    autoFocus
+                    type="password"
+                    value={password}
+                    onChangeText={(text)=>setPassword(text)}
+                />
+            </View>
+            <Button containerStyle={styles.button} title="Login" onPress={signIn} />
+            <Button containerStyle={styles.button} title="Create Account" onPress={signIn} />
+        </KeyboardAvoidingView>
 
     );
   } 
+
+
 const styles = StyleSheet.create({
+    inputView: {
+        
+
+    },
+    button: {
+
+
+    },
     container: {
         flex: 1,
         backgroundColor: '#C03221',
         alignItems: 'center',
         justifyContent: 'center',
+        padding: 15,
+
       },
+      
 })
 
 
