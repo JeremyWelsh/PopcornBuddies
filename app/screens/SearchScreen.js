@@ -29,7 +29,6 @@ const SearchScreen = () => {
       try {
        const response = await fetch(Content_Search_Link);
        const json = await response.json();
-       console.log(data);
        setData(json.results);
       } catch (error) {
        console.error(error);
