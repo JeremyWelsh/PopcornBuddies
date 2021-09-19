@@ -15,7 +15,7 @@ const RegisterScreen = ({navigation}) => {
     }
     useLayoutEffect(()=>{
         navigation.setOptions({
-            headerBackTitle:"login",
+            headerBackTitle:"LGIANOIFGNOASINFON",
         });
     }, [navigation]);
     return (
@@ -39,6 +39,7 @@ const RegisterScreen = ({navigation}) => {
                 <Input
                     placeholder="Password"
                     type="password"
+                    secureTextEntry
                     value={password}
                     onChangeText={(text)=>setPassword(text)}
                 />

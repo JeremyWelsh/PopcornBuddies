@@ -27,6 +27,7 @@ const LoginScreen = ({navigation}) => {
                 <Input
                     placeholder="Password"
                     type="password"
+                    secureTextEntry
                     value={password}
                     onChangeText={(text)=>setPassword(text)}
                 />

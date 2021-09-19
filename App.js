@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, CardStyleInterpolators, TransitionSpecs, TransitionPresets } from '@react-navigation/stack';
 import 'react-native-gesture-handler';
 import RecommendationsScreen from './app/screens/RecommendationsScreen';
 import ProfileScreen from './app/screens/ProfileScreen';
@@ -13,7 +13,6 @@ import LoginScreen from './app/screens/auth/LoginScreen';
 import RegisterScreen from './app/screens/auth/RegisterScreen';
 
 const Stack = createStackNavigator();
-const LoginStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
@@ -24,14 +23,14 @@ const tabScreenStyle = {
   headerTintColor: "white", // any icons will be white in header
 };
 
-function LoginScreens() {
-  //options={{ headerShown: false }}
-  return (
-    <LoginStack.Navigator initialRouteName={"Login"}>
-      <LoginStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <LoginStack.Screen name="Register" component={RegisterScreen} />
-    </LoginStack.Navigator>
-  );
+const headerOptions = {
+  headerStyle: {
+    backgroundColor: '#17BEBB',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
 }
 
 function MyTabs() {
@@ -46,25 +45,16 @@ function MyTabs() {
   );
 }
 
-/* 
-{Store.userToken == null ? (
-         <Stack.Screen name="Login" component={LoginScreens} options={{ headerShown: false }} />
-        ) : (
-        <MyTabs />
-        )
-      }
-      */
+
 export default function App() {
   return (
     <NavigationContainer>
-        <Stack.Navigator>
-          {true ? (
-            <Stack.Screen name="LoginScreens" component={LoginScreens} options={{ headerShown: false }} />
-            ) : (
-            <Stack.Screen name="MainTabNavigator" component={MyTabs} options={{ headerShown: false }} />
-            )
-          }
+        <Stack.Navigator initialRouteName={"Login"} screenOptions={headerOptions}>
+          <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="Register" component={RegisterScreen}/>
+          <Stack.Screen name="MainTabNavigator" component={MyTabs} options={{ headerShown: false }} />
         </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
