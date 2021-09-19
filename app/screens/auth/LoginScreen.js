@@ -26,7 +26,6 @@ const LoginScreen = ({navigation}) => {
                 />
                 <Input
                     placeholder="Password"
-                    autoFocus
                     type="password"
                     value={password}
                     onChangeText={(text)=>setPassword(text)}

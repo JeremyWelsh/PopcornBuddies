@@ -58,7 +58,7 @@ export default function App() {
   return (
     <NavigationContainer>
         <Stack.Navigator>
-          {false ? (
+          {true ? (
             <Stack.Screen name="LoginScreens" component={LoginScreens} options={{ headerShown: false }} />
             ) : (
             <Stack.Screen name="MainTabNavigator" component={MyTabs} options={{ headerShown: false }} />
