@@ -6,7 +6,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 
 //import colours from '../config/colours';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
     const signIn = () => {
@@ -33,7 +33,7 @@ const LoginScreen = () => {
                 />
             </View>
             <Button containerStyle={styles.button} title="Login" onPress={signIn} />
-            <Button containerStyle={styles.button} title="Create Account" onPress={signIn} />
+            <Button containerStyle={styles.button} title="Create Account" onPress={() => navigation.navigate("Register")}/>
         </KeyboardAvoidingView>
 
     );

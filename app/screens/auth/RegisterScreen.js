@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 //import colours from '../config/colours';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies RegisterScreen</Text>

@@ -25,10 +25,11 @@ const tabScreenStyle = {
 };
 
 function LoginScreens() {
+  //options={{ headerShown: false }}
   return (
     <LoginStack.Navigator initialRouteName={"Login"}>
       <LoginStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-      <LoginStack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+      <LoginStack.Screen name="Register" component={RegisterScreen} />
     </LoginStack.Navigator>
   );
 }
@@ -57,7 +58,7 @@ export default function App() {
   return (
     <NavigationContainer>
         <Stack.Navigator>
-          {true ? (
+          {false ? (
             <Stack.Screen name="LoginScreens" component={LoginScreens} options={{ headerShown: false }} />
             ) : (
             <Stack.Screen name="MainTabNavigator" component={MyTabs} options={{ headerShown: false }} />
