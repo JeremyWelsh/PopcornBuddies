@@ -3,21 +3,29 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
 import { Input } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
-
+import { auth } from "../../../firebase.js";
 //import colours from '../config/colours';
 
 const RegisterScreen = ({navigation}) => {
-    const[name, setName] = useState("");
+    // setters for the registration variables
+    const[buddyName, setName] = useState("");
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
-    const register = () => {
 
-    }
-    useLayoutEffect(()=>{
-        navigation.setOptions({
-            headerBackTitle:"LGIANOIFGNOASINFON",
-        });
-    }, [navigation]);
+    
+    const register = () => {
+        // requires an email and password to log in
+        auth.createUserWithEmailAndPassword(email,password)
+        .then(authUser =>{ 
+            // if the requirements are met then update the email with the buddyName
+            authUser.user.updateEmail({
+                displayName: buddyName,
+            })
+        } )
+        //if the requirements were not met then alert the user on the screen with the error
+        .catch(error => alert(error.message));
+    };
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <Text>Popcorn Buddies RegisterScreen</Text>

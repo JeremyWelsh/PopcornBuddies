@@ -15,14 +15,14 @@ import RegisterScreen from './app/screens/auth/RegisterScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
-
+//const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
+/*
 const tabScreenStyle = {
   headerStyle: { backgroundColor: "#900" }, // header colour
   headerTitleStyle: { color: "blue" }, // title will be blue
   headerTintColor: "white", // any icons will be white in header
 };
-
+*/
 const headerOptions = {
   headerStyle: {
     backgroundColor: '#17BEBB',
