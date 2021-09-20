@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Input } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 
@@ -13,7 +13,7 @@ const LoginScreen = ({navigation}) => {
 
     }
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <Text>Popcorn Buddies LoginScreen</Text>
             <StatusBar style="auto" />
             <View style={styles.inputView}>
@@ -34,7 +34,7 @@ const LoginScreen = ({navigation}) => {
             </View>
             <Button containerStyle={styles.button} title="Login" onPress={signIn} />
             <Button containerStyle={styles.button} title="Create Account" onPress={() => navigation.navigate("Register")}/>
-        </KeyboardAvoidingView>
+        </View>
 
     );
   } 

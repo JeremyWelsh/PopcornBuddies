@@ -27,15 +27,15 @@ const RegisterScreen = ({navigation}) => {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
+        <View style={styles.container}>
             <Text>Popcorn Buddies RegisterScreen</Text>
             <StatusBar style="auto" />
             <View style={styles.inputView}>
             <Input
                     placeholder="Name"
                     autoFocus
-                    type="name"
-                    value={name}
+                    type="buddyName"
+                    value={buddyName}
                     onChangeText={(text)=>setName(text)}
                 />
                 <Input
@@ -53,7 +53,7 @@ const RegisterScreen = ({navigation}) => {
                 />
             </View>
             <Button containerStyle={styles.button} title="Create Account" onPress={register} />
-        </KeyboardAvoidingView>
+        </View>
 
     );
   } 
