@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from "react-native";
 import { Input } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
-
+import { auth } from "../../../firebase.js";
 //import colours from '../config/colours';
 
 const LoginScreen = ({navigation}) => {
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
+    useEffect(() => {
+        auth.onAuthStateChanged((authUser)=>{
+            if(authUser){
+                navigation.replace("MainTabNavigator");
+            }
+        })
+
+    },[]);
     const signIn = () => {
 
     }

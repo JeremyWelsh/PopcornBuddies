@@ -18,7 +18,7 @@ const RegisterScreen = ({navigation}) => {
         auth.createUserWithEmailAndPassword(email,password)
         .then(authUser =>{ 
             // if the requirements are met then update the email with the buddyName
-            authUser.user.updateEmail({
+            authUser.user.updateProfile({
                 displayName: buddyName,
             })
         } )
