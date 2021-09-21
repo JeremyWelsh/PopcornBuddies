@@ -10,7 +10,7 @@ import colours from '../config/colours';
 // could have a toggle for switching between movies and tv shows
 
 
-const AddReviewScreen = () => {
+const AddReviewScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies AddReviewScreen</Text>

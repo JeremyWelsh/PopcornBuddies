@@ -20,7 +20,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 );
 
 
-const SearchScreen = () => {
+const SearchScreen = ({navigation}) => {
 
     const [selectedId, setSelectedId] = useState(null);
     const [isLoading, setLoading] = useState(true);

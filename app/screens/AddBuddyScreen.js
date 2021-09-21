@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import colours from '../config/colours';
 
-const AddBuddyScreen = () => {
+const AddBuddyScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies AddBuddyScreen</Text>

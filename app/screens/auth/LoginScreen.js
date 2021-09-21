@@ -23,7 +23,8 @@ const LoginScreen = ({navigation}) => {
     },[]);
     // login method called when the signin button is pressed
     const LogIn = () => {
-        auth.signInWithEmailAndPassword(email,password);
+        auth.signInWithEmailAndPassword(email,password)
+        .catch((error) =>alert(error));
     }
     //screen to be returned with email, password, login and register buttons
     return (
