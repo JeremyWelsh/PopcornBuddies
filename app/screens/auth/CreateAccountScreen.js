@@ -1,19 +1,22 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { Input } from 'react-native-elements';
 import { Button } from 'react-native-elements/dist/buttons/Button';
 import { auth } from "../../../firebase.js";
 //import colours from '../config/colours';
 
-const RegisterScreen = ({navigation}) => {
-    // setters for the registration variables
+//followed the start of this tutorial to help code the login and create account screens
+//https://www.youtube.com/watch?v=MJzmZ9qmdaE
+
+const CreateAccountScreen = ({navigation}) => {
+    // buddyname, email, and password setters and variables
     const[buddyName, setName] = useState("");
     const[email, setEmail] = useState("");
     const[password, setPassword] = useState("");
 
-    
-    const register = () => {
+    // sign up method called when the user presses the create account button
+    const CreateAccount = () => {
         // requires an email and password to log in
         auth.createUserWithEmailAndPassword(email,password)
         .then(authUser =>{ 
@@ -25,7 +28,7 @@ const RegisterScreen = ({navigation}) => {
         //if the requirements were not met then alert the user on the screen with the error
         .catch(error => alert(error.message));
     };
-
+    // return the screen
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies RegisterScreen</Text>
@@ -52,7 +55,7 @@ const RegisterScreen = ({navigation}) => {
                     onChangeText={(text)=>setPassword(text)}
                 />
             </View>
-            <Button containerStyle={styles.button} title="Create Account" onPress={register} />
+            <Button containerStyle={styles.button} title="Create Account" onPress={CreateAccount} />
         </View>
 
     );
@@ -79,4 +82,4 @@ const styles = StyleSheet.create({
 
 
 
-export default RegisterScreen;
+export default CreateAccountScreen;
