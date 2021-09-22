@@ -6,7 +6,9 @@ import { Button, SearchBar, Rating  } from 'react-native-elements';
 import colours from '../config/colours';
 
 
-const Content_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
+const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+
+//https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
 // for multi search
@@ -25,7 +27,7 @@ const SearchScreen = ({navigation}) => {
     const getContent = async () => {
       try {
        const response = await fetch(Content_Search_Link+search);
-       console.log(Content_Search_Link+search);
+       //console.log(Content_Search_Link+search); //for testing
        const json = await response.json();
        setData(json.results);
       } catch (error) {
@@ -54,7 +56,7 @@ const SearchScreen = ({navigation}) => {
 
     const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-        <Text style={[styles.title, textColor]}>{item.title}</Text>
+        <Text style={[styles.title, textColor]}>{item.title || item.name}</Text>
         <Text style={[styles.extrainfo, textColor]}>Released: {item.release_date}</Text>
         <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
         <Rating imageSize={15}
@@ -69,11 +71,10 @@ const SearchScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <Text>Popcorn Buddies SearchScreen</Text>
             <StatusBar style="auto" />
             <View style={styles.searchBox}>
               <SearchBar
-                    placeholder="Search"
+                    //placeholder="Search"
                     autoFocus
                     value={search}
                     onChangeText={(text)=>setSearch(text)}
@@ -117,17 +118,17 @@ const styles = StyleSheet.create({
         fontSize: 15,
       },
       button: {
-        marginTop: 5,
+        //marginTop: 5,
         backgroundColor: '#19323C',
-    },
-    searchBox: {
-      width: 400,
-      padding: 5,
-      //alignItems: 'center',
-      justifyContent: 'center',
-    },
-    ratingSearch: {
-    },
+      },
+      searchBox: {
+        //padding: 5,
+        //alignItems: 'center',
+        justifyContent: 'center',
+        //backgroundColor: '#029420'
+      },
+      ratingSearch: {
+      },
     
 });
   
