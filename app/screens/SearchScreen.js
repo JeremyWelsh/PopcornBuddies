@@ -4,10 +4,11 @@ import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity }
 import { Button, SearchBar, Rating  } from 'react-native-elements';
 
 import colours from '../config/colours';
+import { Image } from 'react-native-elements/dist/image/Image';
 
 
 const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
-
+const Image_Link = "https://image.tmdb.org/t/p/w500";
 //https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
@@ -26,10 +27,13 @@ const SearchScreen = ({navigation}) => {
 
     const getContent = async () => {
       try {
-       const response = await fetch(Content_Search_Link+search);
-       //console.log(Content_Search_Link+search); //for testing
-       const json = await response.json();
-       setData(json.results);
+        var response = await fetch(Content_Search_Link+search);;
+        if(search==""){
+          response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
+        }
+        //console.log(Content_Search_Link+search); //for testing
+        const json = await response.json();
+        setData(json.results);
       } catch (error) {
        console.error(error);
       } finally {
@@ -57,24 +61,26 @@ const SearchScreen = ({navigation}) => {
     const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
         <Text style={[styles.title, textColor]}>{item.title || item.name}</Text>
-        <Text style={[styles.extrainfo, textColor]}>Released: {item.release_date}</Text>
-        <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
-        <Rating imageSize={15}
-          type= "custom"
-          readonly 
-          startingValue={item.vote_average/2}
-          ratingColor="#fff"
-          tintColor={item.id === selectedId ? "#7BAE7F" : "#95D7AE"}
-          ratingBackgroundColor= "#000"/>
+        <Rating imageSize={20}
+            type= "custom"
+            readonly 
+            startingValue={item.vote_average/2}
+            ratingColor="#fff"
+            tintColor={item.id === selectedId ? "#7BAE7F" : "#95D7AE"}
+            ratingBackgroundColor= "#000"/>
+        <Text style={[styles.extrainfo, textColor]}>Released: {item.release_date || item.first_air_date}</Text>
+        <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>    
+        <Image source={{ uri: `${Image_Link+item.poster_path}`}} style={{width:150, height: 150}}/>     
+        <Text>{Image_Link+item.poster_path}</Text>
       </TouchableOpacity>
   );
-
+//<Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
             <View style={styles.searchBox}>
               <SearchBar
-                    //placeholder="Search"
+                    placeholder="Popular in the last week"
                     autoFocus
                     value={search}
                     onChangeText={(text)=>setSearch(text)}
@@ -82,7 +88,7 @@ const SearchScreen = ({navigation}) => {
               />
               <Button containerStyle={styles.button} title="Search" onPress={getContent} />
             </View>
-            {isLoading ? <ActivityIndicator/> : (
+            {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' /> : (
             <FlatList
                 data={data}
                 renderItem={renderItem}
@@ -102,16 +108,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#EEE0CB',
         flex: 1,
         //marginTop: StatusBar.currentHeight || 0,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
       },
       item: {
         padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        marginVertical: 7,
+        marginHorizontal: 12,
+        alignItems: 'flex-start',
       },
       title: {
         fontWeight: 'bold',
-        fontSize: 20,
+        fontSize: 24,
 
       },
       extrainfo: {
@@ -126,8 +133,6 @@ const styles = StyleSheet.create({
         //alignItems: 'center',
         justifyContent: 'center',
         //backgroundColor: '#029420'
-      },
-      ratingSearch: {
       },
     
 });

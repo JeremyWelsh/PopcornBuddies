@@ -28,7 +28,15 @@ const headerOptions = {
 
 function MyTabs() {
   return (
-    <Tab.Navigator initialRouteName={"Recommendations"}>
+    <Tab.Navigator initialRouteName={"Recommendations"} screenOptions={{
+      "tabBarHideOnKeyboard": true,
+      "tabBarStyle": [
+        {
+          "display": "flex"
+        },
+        null
+      ]
+    }}>
       <Tab.Screen name="Recommendations" component={RecommendationsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Add" component={AddReviewScreen} />
