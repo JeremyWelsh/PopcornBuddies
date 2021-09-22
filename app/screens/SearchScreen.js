@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { Button, SearchBar, Rating  } from 'react-native-elements';
 
 import colours from '../config/colours';
 
 
-const Content_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=Transformers&Page=1";
+const Content_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
 // for multi search
 
 
-const Item = ({ item, onPress, backgroundColor, textColor }) => (
-    <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-      <Text style={[styles.title, textColor]}>{item.title}</Text>
-      <Text style={[styles.extrainfo, textColor]}>{item.release_date}</Text>
-      <Text style={[styles.extrainfo, textColor]}>{item.vote_average}</Text>
-    </TouchableOpacity>
-);
+
 
 
 const SearchScreen = ({navigation}) => {
@@ -25,9 +20,12 @@ const SearchScreen = ({navigation}) => {
     const [selectedId, setSelectedId] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [search, setSearch] = useState("");
+
     const getContent = async () => {
       try {
-       const response = await fetch(Content_Search_Link);
+       const response = await fetch(Content_Search_Link+search);
+       console.log(Content_Search_Link+search);
        const json = await response.json();
        setData(json.results);
       } catch (error) {
@@ -36,6 +34,7 @@ const SearchScreen = ({navigation}) => {
        setLoading(false);
       }
     }
+
     useEffect(() => {
       getContent();
     }, []);
@@ -53,10 +52,35 @@ const SearchScreen = ({navigation}) => {
       );
     };
 
+    const Item = ({ item, onPress, backgroundColor, textColor }) => (
+      <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+        <Text style={[styles.title, textColor]}>{item.title}</Text>
+        <Text style={[styles.extrainfo, textColor]}>Released: {item.release_date}</Text>
+        <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
+        <Rating imageSize={15}
+          type= "custom"
+          readonly 
+          startingValue={item.vote_average/2}
+          ratingColor="#fff"
+          tintColor={item.id === selectedId ? "#7BAE7F" : "#95D7AE"}
+          ratingBackgroundColor= "#000"/>
+      </TouchableOpacity>
+  );
+
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies SearchScreen</Text>
             <StatusBar style="auto" />
+            <View style={styles.searchBox}>
+              <SearchBar
+                    placeholder="Search"
+                    autoFocus
+                    value={search}
+                    onChangeText={(text)=>setSearch(text)}
+                    lightTheme="true"
+              />
+              <Button containerStyle={styles.button} title="Search" onPress={getContent} />
+            </View>
             {isLoading ? <ActivityIndicator/> : (
             <FlatList
                 data={data}
@@ -73,17 +97,11 @@ const SearchScreen = ({navigation}) => {
 
 
 const styles = StyleSheet.create({
-    /*container: {
-        flex: 1,
-        backgroundColor: '#990',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      */
       container: {
         backgroundColor: '#EEE0CB',
         flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
+        //marginTop: StatusBar.currentHeight || 0,
+        justifyContent: 'center',
       },
       item: {
         padding: 20,
@@ -98,6 +116,19 @@ const styles = StyleSheet.create({
       extrainfo: {
         fontSize: 15,
       },
+      button: {
+        marginTop: 5,
+        backgroundColor: '#19323C',
+    },
+    searchBox: {
+      width: 400,
+      padding: 5,
+      //alignItems: 'center',
+      justifyContent: 'center',
+    },
+    ratingSearch: {
+    },
+    
 });
   
 
