@@ -8,7 +8,8 @@ import { Image } from 'react-native-elements/dist/image/Image';
 
 
 const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
-const Image_Link = "https://image.tmdb.org/t/p/w500";
+const Image_Link = "https://image.tmdb.org/t/p/w200";
+const Genre_Link = "https://api.themoviedb.org/3/genre/movie/list?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US";
 //https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
@@ -22,7 +23,8 @@ const SearchScreen = ({navigation}) => {
 
     const [selectedId, setSelectedId] = useState(null);
     const [isLoading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
+    const [content, setContent] = useState([]);
+    const [genres, setGenres] = useState([]);
     const [search, setSearch] = useState("");
 
     const getContent = async () => {
@@ -33,7 +35,7 @@ const SearchScreen = ({navigation}) => {
         }
         //console.log(Content_Search_Link+search); //for testing
         const json = await response.json();
-        setData(json.results);
+        setContent(json.results);
       } catch (error) {
        console.error(error);
       } finally {
@@ -41,13 +43,40 @@ const SearchScreen = ({navigation}) => {
       }
     }
 
+    const getGenres = async () => {
+      /*try {
+        var response = await fetch(Genre_Link);
+        //console.log(Content_Search_Link+search); //for testing
+        const json = await response.json();
+        setGenres(json.genres);
+      } catch (error) {
+       console.error(error);
+      } finally {
+       setLoading(false);
+      }*/
+      // tried forever to try get the other list to work but it never did so i followed the advice from this 
+      // stack overflow on how to turn the json array into this type of array
+      //https://stackoverflow.com/questions/61615574/translate-gendre-ids-from-tmdb-api-in-react-native-application
+      fetch(Genre_Link)
+        .then(genre => genre.json())
+        .then(result => {
+            const genres = result.genres.reduce((genres,gObj) => {
+                const { id, name } = gObj
+                genres[id] = name
+                return genres
+            },[])
+            setGenres(genres)
+        })
+    }
+
     useEffect(() => {
       getContent();
+      getGenres();
     }, []);
 
     const renderItem = ({ item }) => {
-      const backgroundColor = item.id === selectedId ? "#7BAE7F" : "#95D7AE";
-      const color = item.id === selectedId ? 'white' : 'black';
+      const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
+      const color = /*item.id === selectedId ? 'white' :*/ 'black';
       return (
         <Item
           item={item}
@@ -58,22 +87,31 @@ const SearchScreen = ({navigation}) => {
       );
     };
 
+  
+
     const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+        <View style={{alignItems:'flex-start', flex:1}}>
         <Text style={[styles.title, textColor]}>{item.title || item.name}</Text>
         <Rating imageSize={20}
             type= "custom"
             readonly 
             startingValue={item.vote_average/2}
             ratingColor="#fff"
-            tintColor={item.id === selectedId ? "#7BAE7F" : "#95D7AE"}
+            tintColor={"#95D7AE"}
             ratingBackgroundColor= "#000"/>
+        <Text style={[styles.extrainfo, textColor]}>Director: {item.vote_average}</Text>
         <Text style={[styles.extrainfo, textColor]}>Released: {item.release_date || item.first_air_date}</Text>
-        <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>    
-        <Image source={{ uri: `${Image_Link+item.poster_path}`}} style={{width:150, height: 150}}/>     
-        <Text>{Image_Link+item.poster_path}</Text>
+        <Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
+        <Text style={[styles.extrainfo, textColor]}>Genres: {genres[item.genre_ids[0]]}, {genres[item.genre_ids[1]]}</Text>
+        
+      
+
+        </View>
+        <Image source={{ uri: `${Image_Link+item.poster_path}`}} style={{width:100, height: 160,}}/>   
       </TouchableOpacity>
   );
+  //item.id === selectedId ? "#7BAE7F" : "#95D7AE"
 //<Text style={[styles.extrainfo, textColor]}>Overall Rating: {item.vote_average}</Text>
     return (
         <View style={styles.container}>
@@ -90,9 +128,12 @@ const SearchScreen = ({navigation}) => {
             </View>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' /> : (
             <FlatList
-                data={data}
+                data={content}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={5}
             />
             )}
         </View>
@@ -115,6 +156,7 @@ const styles = StyleSheet.create({
         marginVertical: 7,
         marginHorizontal: 12,
         alignItems: 'flex-start',
+        flexDirection: 'row',
       },
       title: {
         fontWeight: 'bold',
