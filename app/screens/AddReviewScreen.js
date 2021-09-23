@@ -46,6 +46,17 @@ const AddReviewScreen = ({navigation}) => {
         getContent();
     }, []);
 
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            setContentID("");
+            setContentName("");
+            setComment("");
+            setSearch("");
+            getContent();
+        });
+        return unsubscribe;
+    }, [navigation]);
+
     const renderItem = ({ item }) => {
         //removed for better performance
         const backgroundColor = item.id === contentId ? "#7BAE7F" : "#95D7AE";
@@ -80,7 +91,7 @@ const AddReviewScreen = ({navigation}) => {
               />
             <Button containerStyle={styles.button} title="Search" onPress={getContent} />
             </View>
-            <View style={{height:180}}>
+            <View style={{height:185}}>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
                 data={content}

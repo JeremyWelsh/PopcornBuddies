@@ -91,7 +91,13 @@ const SearchScreen = ({navigation}) => {
       getContent();
       //getGenres();
     }, []);
-
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            setSearch("");
+            getContent();
+        });
+        return unsubscribe;
+    }, [navigation]);
     const renderItem = ({ item }) => {
       //removed for better performance
       const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
