@@ -145,7 +145,7 @@ const SearchScreen = ({navigation}) => {
               />
               <Button containerStyle={styles.button} title="Search" onPress={getContent} />
             </View>
-            {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' /> : (
+            {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
                 data={content}
                 renderItem={renderItem}
