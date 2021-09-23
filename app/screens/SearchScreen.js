@@ -28,7 +28,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         readonly 
         startingValue={item.vote_average/2}
         ratingColor="#fff"
-        tintColor={"#95D7AE"}
+        tintColor="#95D7AE"
         ratingBackgroundColor= "#000"/>
       <Text style={[styles.extrainfo, textColor]}>Released: {(item.release_date||item.first_air_date)? item.release_date||item.first_air_date:"No date provided"}</Text>
       <Text style={[styles.overview, textColor]}>{item.overview? item.overview.substring(0, 120)+".." :"No overview provided"}</Text>
@@ -90,8 +90,8 @@ const SearchScreen = ({navigation}) => {
     
     const renderItem = ({ item }) => {
       //removed for better performance
-      const backgroundColor = item.id === selectedId ? "#7BAE7F" : "#95D7AE";
-      const color = item.id === selectedId ? 'white' : 'black';
+      const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
+      const color = /*item.id === selectedId ? 'white' :*/ 'black';
       return (
         <Item
           item={item}
@@ -124,9 +124,10 @@ const SearchScreen = ({navigation}) => {
                 data={content}
                 renderItem={renderItem}
                 keyExtractor={item => `${item.id}`}
-                initialNumToRender={10}
+                initialNumToRender={5}
                 maxToRenderPerBatch={10}
                 windowSize={5}
+                contentContainerStyle={{ paddingBottom: 250 }}
             />
             )}
              </TouchableWithoutFeedback>
