@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity  } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard  } from "react-native";
 import { auth, db } from "../../firebase.js";
-import { Button, SearchBar, Input } from 'react-native-elements';
+import { Button, SearchBar, Input, Rating } from 'react-native-elements';
 import colours from '../config/colours';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
-const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const Movie_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const TV_Search_Link = "https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
 
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>  
@@ -18,11 +20,12 @@ const AddReviewScreen = ({navigation}) => {
 
     const[contentId, setContentID] = useState("");
     const[contentName, setContentName] = useState("");
-    const[rating, setRating] = useState("");
+    const[starRating, setRating] = useState(0);
     const[comment, setComment] = useState("");
     const[search, setSearch] = useState("");
     const[isLoading, setLoading] = useState(true);
     const[content, setContent] = useState([]);
+    const[type, setType] = useState("");
 
     const addReview = () => {
         db.collection("users")
@@ -31,33 +34,43 @@ const AddReviewScreen = ({navigation}) => {
         .set(contentId,rating,comment)
     };
 
-    const getContent = async () => {
-        try {
-          var response = await fetch(Content_Search_Link+search);
-          if(search===""){
-            response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
-          }
-          //console.log(Content_Search_Link+search); //for testing
-          const json = await response.json();
-          setContent(json.results);
-        } catch (error) {
-         console.error(error);
-        } finally {
-         setLoading(false);
-        }
+    const getContentTv = async () => {
+      try {
+        var response = await fetch(TV_Search_Link+search);
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        const json = await response.json();
+        setContent(json.results);
+      } catch (error) {
+       console.error(error);
+      } finally {
+       setLoading(false);
+      }
+    }
+    const getContentMovie = async () => {
+      try {
+        var response = await fetch(Movie_Search_Link+search); 
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        const json = await response.json();
+        setContent(json.results);
+      } catch (error) {
+       console.error(error);
+      } finally {
+       setLoading(false);
+      }
     }
 
     useEffect(() => {
-        getContent();
+      getContentMovie();
     }, []);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            setRating(0);
             setContentID("");
             setContentName("");
             setComment("");
             setSearch("");
-            getContent();
+            getContentMovie();
         });
         return unsubscribe;
     }, [navigation]);
@@ -69,18 +82,18 @@ const AddReviewScreen = ({navigation}) => {
         return (
           <Item
             item={item}
-            onPress={() => {setContentID(item.id), setContentName(item.title || item.name)}}
+            onPress={() => {setContentID(item.id), setContentName(item.title || item.name), setType(item.title?"Movie":"TV")}}
             backgroundColor={{ backgroundColor }}
             textColor={{ color }}
           />
         );
       };
-      
-
+    
 
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.searchBox}>
             <SearchBar
                     placeholder="Search"
@@ -89,7 +102,10 @@ const AddReviewScreen = ({navigation}) => {
                     onChangeText={(text)=>setSearch(text)}
                     lightTheme="true"
               />
-            <Button containerStyle={styles.button} title="Search" onPress={getContent} />
+              <View style={{flexDirection:"row", backgroundColor:'#2393D9'}}>
+                <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
+                <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
+              </View>
             </View>
             <View style={{height:185}}>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
@@ -97,14 +113,19 @@ const AddReviewScreen = ({navigation}) => {
                 data={content}
                 renderItem={renderItem}
                 keyExtractor={item => item.id.toString()}
-                initialNumToRender={10}
+                initialNumToRender={5}
                 maxToRenderPerBatch={10}
                 windowSize={5}
             />
             )}
             </View>
             <View style={styles.inputView}>
-            <Text>Selected Content: {contentName} {contentId}</Text>
+            <Text>Selected Content: {contentName} {contentId} {type} {starRating}</Text>
+            <Rating
+              ratingCount={5}
+              imageSize={60}
+              //onFinalRating={useEffect(()=>{setRating(Rating*2)},[])}
+            />
             <Input
                     placeholder="comment"
                     autoFocus
@@ -114,6 +135,7 @@ const AddReviewScreen = ({navigation}) => {
                 />
                
             </View>
+            </TouchableWithoutFeedback>
         </View>
 
     );
@@ -143,7 +165,7 @@ const styles = StyleSheet.create({
       },
       button: {
         //marginTop: 5,
-        backgroundColor: '#19323C',
+        flex:1,
       },
       searchBox: {
         //padding: 5,
