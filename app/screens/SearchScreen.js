@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
 import { Button, SearchBar, Rating  } from 'react-native-elements';
-
-import colours from '../config/colours';
 import { Image } from 'react-native-elements/dist/image/Image';
 
 
@@ -128,11 +126,11 @@ const SearchScreen = ({navigation}) => {
         <Image source={item.poster_path?{ uri: `${Image_Link+item.poster_path}`}:null} style={{width:125, height: 180,}}/>   
       </TouchableOpacity>
   );
-  //item.id === selectedId ? "#7BAE7F" : "#95D7AE"
+  
 
   /*
-  <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} 
-</Text>
+  item.id === selectedId ? "#7BAE7F" : "#95D7AE"
+  <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} </Text>
   */
     return (
         <View style={styles.container}>
