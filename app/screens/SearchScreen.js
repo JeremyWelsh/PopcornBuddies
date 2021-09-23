@@ -17,8 +17,28 @@ const Genre_TV_Link = "https://api.themoviedb.org/3/genre/tv/list?api_key=2ba045
 // for multi search
 
 
-
-
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
+    <View style={{alignItems:'flex-start', flex:1, paddingRight:15}}>
+      
+    <Text style={[styles.title, textColor]}>{item.title || item.name}</Text>
+      <Rating imageSize={20}
+        type= "custom"
+        readonly 
+        startingValue={item.vote_average/2}
+        ratingColor="#fff"
+        tintColor={"#95D7AE"}
+        ratingBackgroundColor= "#000"/>
+      <Text style={[styles.extrainfo, textColor]}>Released: {(item.release_date||item.first_air_date)? item.release_date||item.first_air_date:"No date provided"}</Text>
+      <Text style={[styles.overview, textColor]}>{item.overview? item.overview.substring(0, 120)+".." :"No overview provided"}</Text>
+    </View>
+    <Image source={item.poster_path?{ uri: `${Image_Link+item.poster_path}`}:null} style={{width:125, height: 180,}}/>   
+  </TouchableOpacity>
+);
+/*
+  item.id === selectedId ? "#7BAE7F" : "#95D7AE"
+  <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} </Text>
+  */
 
 const SearchScreen = ({navigation}) => {
 
@@ -28,17 +48,17 @@ const SearchScreen = ({navigation}) => {
     const [mgenres, setMGenres] = useState([]);
     const [tvgenres, setTVGenres] = useState([]);
     const [search, setSearch] = useState("");
-    var [contentType, setType] = useState("");
+    var [contentType, setType] = useState(true);
 
 
     const getContent = async () => {
       try {
-        console.log("LLLLLLLLLLLLLLLLLLLLL")
         //var response = await fetch(Movie_Search_Link+search);
-        if(contentType==="Movie"){var response = await fetch(Movie_Search_Link+search);
+        if(contentType){var response = await fetch(Movie_Search_Link+search); 
         }else{var response = await fetch(TV_Search_Link+search);}
         if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
         }
+        console.log("HAHAHAH")
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -46,15 +66,6 @@ const SearchScreen = ({navigation}) => {
       } finally {
        setLoading(false);
       }
-    }
-
-    const getTV =() =>{
-      setType("TV");
-      getContent([]);
-    }
-    const getMovies =() =>{
-      setType("Movie");
-      getContent([]);
     }
 
     useEffect(() => {
@@ -70,47 +81,31 @@ const SearchScreen = ({navigation}) => {
     }, [navigation]);
     
     const renderItem = ({ item }) => {
-      console.log("HEHEHEHEH")
       //removed for better performance
-      const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
-      const color = /*item.id === selectedId ? 'white' :*/ 'black';
+      const backgroundColor = item.id === selectedId ? "#7BAE7F" : "#95D7AE";
+      const color = item.id === selectedId ? 'white' : 'black';
+      console.log(contentType)
       return (
         <Item
           item={item}
-          //onPress={() => setSelectedId(item.id)}
+          onPress={() => setSelectedId(item.id)}
           backgroundColor={{ backgroundColor }}
           textColor={{ color }}
         />
       );
     };
-
   
+    const getTV =() =>{
+      setType(false);
+      console.log(contentType)
+      getContent();
+    }
+    const getMovies =() =>{
+      setType(true);
+      console.log(contentType)
+      getContent();
+    }
 
-    const Item = ({ item, onPress, backgroundColor, textColor }) => (
-      <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
-        <View style={{alignItems:'flex-start', flex:1, paddingRight:15}}>
-          
-        <Text style={[styles.title, textColor]}>{item.title || item.name}</Text>
-          <Rating imageSize={20}
-            type= "custom"
-            readonly 
-            startingValue={item.vote_average/2}
-            ratingColor="#fff"
-            tintColor={"#95D7AE"}
-            ratingBackgroundColor= "#000"/>
-          <Text style={[styles.extrainfo, textColor]}>Released: {(item.release_date||item.first_air_date)? item.release_date||item.first_air_date:"No date provided"}</Text>
-          <Text style={[styles.overview, textColor]}>{item.overview? item.overview.substring(0, 120)+".." :"No overview provided"}</Text>
-        </View>
-        <Image source={item.poster_path?{ uri: `${Image_Link+item.poster_path}`}:null} style={{width:125, height: 180,}}/>   
-      </TouchableOpacity>
-  );
-  
-
-  /*
-  item.id === selectedId ? "#7BAE7F" : "#95D7AE"
-  <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} </Text>
-  */
-  keyExtractor = item => `${item.id}`
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -119,7 +114,7 @@ const SearchScreen = ({navigation}) => {
                     placeholder="Popular in the last week"
                     autoFocus
                     value={search}
-                    onChangeText={(text)=>(setSearch(text),console.log("AHHIDN"))}
+                    onChangeText={(text)=>setSearch(text)}
                     lightTheme="true"
               />
               <Button containerStyle={styles.button} title="Search TV" onPress={getTV} />
@@ -129,7 +124,7 @@ const SearchScreen = ({navigation}) => {
             <FlatList
                 data={content}
                 renderItem={renderItem}
-                keyExtractor={keyExtractor}
+                keyExtractor={item => `${item.id}`}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={5}

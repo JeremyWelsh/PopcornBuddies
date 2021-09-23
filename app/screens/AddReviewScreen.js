@@ -7,7 +7,12 @@ import colours from '../config/colours';
 
 const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
 
-
+const Item = ({ item, onPress, backgroundColor, textColor }) => (
+  <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>  
+      <Text style={[styles.title, textColor]}>{item.title || item.name} </Text>
+      <Text style={[styles.extrainfo, textColor]}>{(item.release_date||item.first_air_date)? (item.release_date||item.first_air_date).substring(0,4):"Null"}</Text>
+  </TouchableOpacity>
+);
 
 const AddReviewScreen = ({navigation}) => {
 
@@ -58,9 +63,6 @@ const AddReviewScreen = ({navigation}) => {
     }, [navigation]);
 
     const renderItem = ({ item }) => {
-      
-      console.log("LELELELELEL")
-      console.log("HEHEHEHEH")
         //removed for better performance
         const backgroundColor = item.id === contentId ? "#7BAE7F" : "#95D7AE";
         const color = item.id === contentId ? 'white' : 'black';
@@ -73,12 +75,7 @@ const AddReviewScreen = ({navigation}) => {
           />
         );
       };
-      const Item = ({ item, onPress, backgroundColor, textColor }) => (
-        <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>  
-            <Text style={[styles.title, textColor]}>{item.title || item.name} </Text>
-            <Text style={[styles.extrainfo, textColor]}>{(item.release_date||item.first_air_date)? (item.release_date||item.first_air_date).substring(0,4):"Null"}</Text>
-        </TouchableOpacity>
-    );
+      
 
 
     return (
