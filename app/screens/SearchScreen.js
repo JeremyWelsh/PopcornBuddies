@@ -48,17 +48,24 @@ const SearchScreen = ({navigation}) => {
     const [mgenres, setMGenres] = useState([]);
     const [tvgenres, setTVGenres] = useState([]);
     const [search, setSearch] = useState("");
-    var [contentType, setType] = useState(true);
 
 
-    const getContent = async () => {
+    const getContentTv = async () => {
       try {
-        //var response = await fetch(Movie_Search_Link+search);
-        if(contentType){var response = await fetch(Movie_Search_Link+search); 
-        }else{var response = await fetch(TV_Search_Link+search);}
-        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
-        }
-        console.log("HAHAHAH")
+        var response = await fetch(TV_Search_Link+search);
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        const json = await response.json();
+        setContent(json.results);
+      } catch (error) {
+       console.error(error);
+      } finally {
+       setLoading(false);
+      }
+    }
+    const getContentMovie = async () => {
+      try {
+        var response = await fetch(Movie_Search_Link+search); 
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -69,13 +76,13 @@ const SearchScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-      getContent();
+      getContentMovie();
     }, []);
     
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             setSearch("");
-            getContent();
+            getContentMovie();
         });
         return unsubscribe;
     }, [navigation]);
@@ -84,7 +91,6 @@ const SearchScreen = ({navigation}) => {
       //removed for better performance
       const backgroundColor = item.id === selectedId ? "#7BAE7F" : "#95D7AE";
       const color = item.id === selectedId ? 'white' : 'black';
-      console.log(contentType)
       return (
         <Item
           item={item}
@@ -94,17 +100,6 @@ const SearchScreen = ({navigation}) => {
         />
       );
     };
-  
-    const getTV =() =>{
-      setType(false);
-      console.log(contentType)
-      getContent();
-    }
-    const getMovies =() =>{
-      setType(true);
-      console.log(contentType)
-      getContent();
-    }
 
     return (
         <View style={styles.container}>
@@ -117,8 +112,8 @@ const SearchScreen = ({navigation}) => {
                     onChangeText={(text)=>setSearch(text)}
                     lightTheme="true"
               />
-              <Button containerStyle={styles.button} title="Search TV" onPress={getTV} />
-              <Button containerStyle={styles.button} title="Search Movies" onPress={getMovies} />
+              <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
+              <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
             </View>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
