@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard } from "react-native";
 import { Button, SearchBar, Rating  } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 
 const Movie_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
@@ -16,7 +17,7 @@ const Genre_TV_Link = "https://api.themoviedb.org/3/genre/tv/list?api_key=2ba045
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
 // for multi search
 
-
+// moved this outside of the search screen so it would not fully reaload on a re render
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
     <View style={{alignItems:'flex-start', flex:1, paddingRight:15}}>
@@ -104,6 +105,7 @@ const SearchScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.searchBox}>
               <SearchBar
                     placeholder="Popular in the last week"
@@ -112,8 +114,10 @@ const SearchScreen = ({navigation}) => {
                     onChangeText={(text)=>setSearch(text)}
                     lightTheme="true"
               />
+              <View style={{flexDirection:"row", backgroundColor:'#2393D9'}}>
               <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
               <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
+              </View>
             </View>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
@@ -125,6 +129,7 @@ const SearchScreen = ({navigation}) => {
                 windowSize={5}
             />
             )}
+             </TouchableWithoutFeedback>
         </View>
 
     );
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
       },
       button: {
         //marginTop: 5,
-        backgroundColor: '#19323C',
+        flex:1,
       },
       searchBox: {
         //padding: 5,
