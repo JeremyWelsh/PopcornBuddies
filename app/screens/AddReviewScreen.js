@@ -29,7 +29,7 @@ const AddReviewScreen = ({navigation}) => {
     const getContent = async () => {
         try {
           var response = await fetch(Content_Search_Link+search);
-          if(search==""){
+          if(search===""){
             response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
           }
           //console.log(Content_Search_Link+search); //for testing
@@ -58,6 +58,9 @@ const AddReviewScreen = ({navigation}) => {
     }, [navigation]);
 
     const renderItem = ({ item }) => {
+      
+      console.log("LELELELELEL")
+      console.log("HEHEHEHEH")
         //removed for better performance
         const backgroundColor = item.id === contentId ? "#7BAE7F" : "#95D7AE";
         const color = item.id === contentId ? 'white' : 'black';

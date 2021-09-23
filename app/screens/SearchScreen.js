@@ -5,7 +5,9 @@ import { Button, SearchBar, Rating  } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
 
 
-const Content_Search_Link = "https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const Movie_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const TV_Search_Link = "https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+
 const Image_Link = "https://image.tmdb.org/t/p/w200";
 const Genre_Movies_Link = "https://api.themoviedb.org/3/genre/movie/list?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US";
 const Genre_TV_Link = "https://api.themoviedb.org/3/genre/tv/list?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US";
@@ -26,14 +28,17 @@ const SearchScreen = ({navigation}) => {
     const [mgenres, setMGenres] = useState([]);
     const [tvgenres, setTVGenres] = useState([]);
     const [search, setSearch] = useState("");
+    var [contentType, setType] = useState("");
+
 
     const getContent = async () => {
       try {
-        var response = await fetch(Content_Search_Link+search);;
-        if(search==""){
-          response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
+        console.log("LLLLLLLLLLLLLLLLLLLLL")
+        //var response = await fetch(Movie_Search_Link+search);
+        if(contentType==="Movie"){var response = await fetch(Movie_Search_Link+search);
+        }else{var response = await fetch(TV_Search_Link+search);}
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');
         }
-        //console.log(Content_Search_Link+search); //for testing
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -43,54 +48,19 @@ const SearchScreen = ({navigation}) => {
       }
     }
 
-    const getGenres = async () => {
-      /*try {
-        var response = await fetch(Genre_Link);
-        //console.log(Content_Search_Link+search); //for testing
-        const json = await response.json();
-        setGenres(json.genres);
-      } catch (error) {
-       console.error(error);
-      } finally {
-       setLoading(false);
-      }
-      */
-      // tried forever to try get this to work the same as the movie method but it never did so i followed the advice from this 
-      // stack overflow on how to turn the json array into this sort of array
-      //https://stackoverflow.com/questions/61615574/translate-gendre-ids-from-tmdb-api-in-react-native-application
-      // fetch for movie genres
-      fetch(Genre_Movies_Link)
-        .then(genre => genre.json())
-        .then(result => {
-            const genres = result.genres.reduce((genres,gObj) => {
-                const { id, name } = gObj
-                genres[id] = name
-                return genres
-            },[])
-            console.log(genres);
-            setMGenres(genres)
-        })
-        
-        //fetch for tv genres
-        fetch(Genre_TV_Link)
-        .then(genre => genre.json())
-        .then(result => {
-            const tvgenres = result.genres.reduce((tvgenres,gObj) => {
-                const { id, name } = gObj
-                tvgenres[id] = name
-                return tvgenres
-            },[])
-            console.log(tvgenres);
-            setTVGenres(tvgenres)
-        })
-        
-        
+    const getTV =() =>{
+      setType("TV");
+      getContent([]);
+    }
+    const getMovies =() =>{
+      setType("Movie");
+      getContent([]);
     }
 
     useEffect(() => {
       getContent();
-      //getGenres();
     }, []);
+    
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
             setSearch("");
@@ -98,14 +68,16 @@ const SearchScreen = ({navigation}) => {
         });
         return unsubscribe;
     }, [navigation]);
+    
     const renderItem = ({ item }) => {
+      console.log("HEHEHEHEH")
       //removed for better performance
       const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
       const color = /*item.id === selectedId ? 'white' :*/ 'black';
       return (
         <Item
           item={item}
-          onPress={() => setSelectedId(item.id)}
+          //onPress={() => setSelectedId(item.id)}
           backgroundColor={{ backgroundColor }}
           textColor={{ color }}
         />
@@ -122,7 +94,7 @@ const SearchScreen = ({navigation}) => {
           <Rating imageSize={20}
             type= "custom"
             readonly 
-            startingValue={item.vote_average}
+            startingValue={item.vote_average/2}
             ratingColor="#fff"
             tintColor={"#95D7AE"}
             ratingBackgroundColor= "#000"/>
@@ -138,6 +110,7 @@ const SearchScreen = ({navigation}) => {
   item.id === selectedId ? "#7BAE7F" : "#95D7AE"
   <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} </Text>
   */
+  keyExtractor = item => `${item.id}`
     return (
         <View style={styles.container}>
             <StatusBar style="auto" />
@@ -146,16 +119,17 @@ const SearchScreen = ({navigation}) => {
                     placeholder="Popular in the last week"
                     autoFocus
                     value={search}
-                    onChangeText={(text)=>setSearch(text)}
+                    onChangeText={(text)=>(setSearch(text),console.log("AHHIDN"))}
                     lightTheme="true"
               />
-              <Button containerStyle={styles.button} title="Search" onPress={getContent} />
+              <Button containerStyle={styles.button} title="Search TV" onPress={getTV} />
+              <Button containerStyle={styles.button} title="Search Movies" onPress={getMovies} />
             </View>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
                 data={content}
                 renderItem={renderItem}
-                keyExtractor={item => item.id.toString()}
+                keyExtractor={keyExtractor}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={5}
@@ -211,3 +185,49 @@ const styles = StyleSheet.create({
 
 
 export default SearchScreen;
+
+
+/*
+const getGenres = async () => {
+  try {
+    var response = await fetch(Genre_Link);
+    //console.log(Content_Search_Link+search); //for testing
+    const json = await response.json();
+    setGenres(json.genres);
+  } catch (error) {
+   console.error(error);
+  } finally {
+   setLoading(false);
+  }
+  
+  // tried forever to try get this to work the same as the movie method but it never did so i followed the advice from this 
+  // stack overflow on how to turn the json array into this sort of array
+  //https://stackoverflow.com/questions/61615574/translate-gendre-ids-from-tmdb-api-in-react-native-application
+  // fetch for movie genres
+  fetch(Genre_Movies_Link)
+    .then(genre => genre.json())
+    .then(result => {
+        const genres = result.genres.reduce((genres,gObj) => {
+            const { id, name } = gObj
+            genres[id] = name
+            return genres
+        },[])
+        console.log(genres);
+        setMGenres(genres)
+    })
+    
+    //fetch for tv genres
+    fetch(Genre_TV_Link)
+    .then(genre => genre.json())
+    .then(result => {
+        const tvgenres = result.genres.reduce((tvgenres,gObj) => {
+            const { id, name } = gObj
+            tvgenres[id] = name
+            return tvgenres
+        },[])
+        console.log(tvgenres);
+        setTVGenres(tvgenres)
+    })
+    
+  }
+  */
