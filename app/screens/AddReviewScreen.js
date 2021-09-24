@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard  } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard, Alert  } from "react-native";
 import { auth, db } from "../../firebase.js";
-import { Button, SearchBar, Input, Rating } from 'react-native-elements';
+import { Button, SearchBar, Input, Rating, ThemeProvider } from 'react-native-elements';
 import colours from '../config/colours';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
@@ -16,6 +16,17 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
+const themeSelected = {
+  colors: {
+    primary: '#e3337d',
+  }
+}
+const themeNot = {
+  colors: {
+    primary: '#000',
+  }
+}
+
 const AddReviewScreen = ({navigation}) => {
 
     const[contentId, setContentID] = useState("");
@@ -26,18 +37,37 @@ const AddReviewScreen = ({navigation}) => {
     const[isLoading, setLoading] = useState(true);
     const[content, setContent] = useState([]);
     const[type, setType] = useState("");
+    const[stype, setSType] = useState("");
 
-    const addReview = () => {
-        db.collection("users")
+    const addReview = async () => {
+      try {
+        if(contentId !=""){
+        await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("reviews")
-        .set(contentId,rating,comment)
+        .add({
+          cID: contentId,
+          cName: contentName,
+          type: type,
+          rating: starRating,
+          comment: comment
+        })
+        alert("AYEEEEE");
+      }else{
+          alert("no bueno m8");
+        }
+      }catch (error) {
+        console.error(error);
+       } finally {
+       }
+
     };
 
     const getContentTv = async () => {
       try {
+        setSType("Tv");
         var response = await fetch(TV_Search_Link+search);
-        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5');}
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -48,8 +78,9 @@ const AddReviewScreen = ({navigation}) => {
     }
     const getContentMovie = async () => {
       try {
+        setSType("Movie");
         var response = await fetch(Movie_Search_Link+search); 
-        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5');}
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -60,21 +91,22 @@ const AddReviewScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-      getContentMovie();
-    }, []);
-
+      getContentTv();
+    }, [search]);
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setRating(0);
-            setContentID("");
-            setContentName("");
-            setComment("");
-            setSearch("");
-            getContentMovie();
-        });
-        return unsubscribe;
-    }, [navigation]);
-
+      setSearch("");
+      setLoading(true);
+    }, []);
+    // not working yet
+    /*useEffect(() => {
+      setSearch("");
+      setRating(0);
+      setContentID("");
+      setContentName("");
+      setComment("");
+    },[{navigation}]);
+    */
+    
     const renderItem = ({ item }) => {
         //removed for better performance
         const backgroundColor = item.id === contentId ? "#7BAE7F" : "#95D7AE";
@@ -88,7 +120,14 @@ const AddReviewScreen = ({navigation}) => {
           />
         );
       };
-    
+    const refresh = () =>{
+        setSearch("");
+        setRating(0);
+        setContentID("");
+        setContentName("");
+        setComment("");
+        setContent([]);
+    }
 
     return (
         <View style={styles.container}>
@@ -99,12 +138,16 @@ const AddReviewScreen = ({navigation}) => {
                     placeholder="Search"
                     autoFocus
                     value={search}
-                    onChangeText={(text)=>setSearch(text)}
+                    onChangeText={(text)=>{setSearch(text)}}
                     lightTheme="true"
               />
               <View style={{flexDirection:"row", backgroundColor:'#2393D9'}}>
+              <ThemeProvider theme={stype=="Tv"?themeSelected:themeNot} >
                 <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
+              </ThemeProvider>
+              <ThemeProvider theme={stype=="Movie"?themeSelected:themeNot} >
                 <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
+              </ThemeProvider>
               </View>
             </View>
             <View style={{height:185}}>
@@ -122,24 +165,36 @@ const AddReviewScreen = ({navigation}) => {
             <View style={styles.inputView}>
             <Text>Selected Content: {contentName} {contentId} {type} {starRating}</Text>
             <Rating
+              startingValue={2.5}
+              showRating 
+              fractions={1}
               ratingCount={5}
-              imageSize={60}
-              //onFinalRating={useEffect(()=>{setRating(Rating*2)},[])}
+              imageSize={30}
+              onFinishRating={rating => setRating(rating)}
             />
             <Input
-                    placeholder="comment"
-                    autoFocus
-                    type="comment"
-                    value={comment}
-                    onChangeText={(text)=>setComment(text)}
-                />
-               
+              placeholder="comment"
+              autoFocus
+              type="comment"
+              value={comment}
+              onChangeText={(text)=>setComment(text)}
+            />
+            <Button title="submit" onPress={()=>{addReview, refresh()}} />
             </View>
             </TouchableWithoutFeedback>
         </View>
 
     );
   } 
+  /*<Input
+  keyboardType='numeric'
+  onChangeText={(number)=> setRating(number)}
+  value={starRating}
+  min="0.0"
+  max="5.0"
+  maxLength={2}  //setting limit of input
+  />
+  */
 const styles = StyleSheet.create({
     container: {
         flex: 1,

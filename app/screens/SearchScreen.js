@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard } from "react-native";
-import { Button, SearchBar, Rating  } from 'react-native-elements';
+import { Button, SearchBar, Rating, ThemeProvider  } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
@@ -16,6 +16,17 @@ const Genre_TV_Link = "https://api.themoviedb.org/3/genre/tv/list?api_key=2ba045
 
 //https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
 // for multi search
+
+const themeSelected = {
+  colors: {
+    primary: '#e3337d',
+  }
+}
+const themeNot = {
+  colors: {
+    primary: '#000',
+  }
+}
 
 // moved this outside of the search screen so it would not fully reaload on a re render
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -46,15 +57,17 @@ const SearchScreen = ({navigation}) => {
     const [selectedId, setSelectedId] = useState(null);
     const [isLoading, setLoading] = useState(true);
     const [content, setContent] = useState([]);
-    const [mgenres, setMGenres] = useState([]);
-    const [tvgenres, setTVGenres] = useState([]);
+    //const [mgenres, setMGenres] = useState([]);
+    //const [tvgenres, setTVGenres] = useState([]);
     const [search, setSearch] = useState("");
+    const[stype, setSType] = useState("");
 
 
     const getContentTv = async () => {
       try {
+        setSType("Tv");
         var response = await fetch(TV_Search_Link+search);
-        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5');}
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -65,8 +78,9 @@ const SearchScreen = ({navigation}) => {
     }
     const getContentMovie = async () => {
       try {
+        setSType("Movie");
         var response = await fetch(Movie_Search_Link+search); 
-        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/all/week?api_key=2ba045feca37e46db2c792c05da251f5');}
+        if(search==""){response = await fetch('https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5');}
         const json = await response.json();
         setContent(json.results);
       } catch (error) {
@@ -77,16 +91,21 @@ const SearchScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-      getContentMovie();
-    }, []);
-    
+      getContentTv();
+    }, [search]);
     useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            setSearch("");
-            getContentMovie();
-        });
-        return unsubscribe;
-    }, [navigation]);
+      setSearch("");
+      setLoading(true);
+    }, []);
+    // not working yet
+    /*useEffect(() => {
+      setSearch("");
+      setRating(0);
+      setContentID("");
+      setContentName("");
+      setComment("");
+    },[{navigation}]);
+    */
     
     const renderItem = ({ item }) => {
       //removed for better performance
@@ -115,8 +134,12 @@ const SearchScreen = ({navigation}) => {
                     lightTheme="true"
               />
               <View style={{flexDirection:"row", backgroundColor:'#2393D9'}}>
-              <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
-              <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
+              <ThemeProvider theme={stype=="Tv"?themeSelected:themeNot} >
+                <Button containerStyle={styles.button} title="Search TV" onPress={getContentTv} />
+              </ThemeProvider>
+              <ThemeProvider theme={stype=="Movie"?themeSelected:themeNot} >
+                <Button containerStyle={styles.button} title="Search Movies" onPress={getContentMovie} />
+              </ThemeProvider>
               </View>
             </View>
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
