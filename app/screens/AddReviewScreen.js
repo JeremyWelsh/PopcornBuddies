@@ -58,8 +58,7 @@ const AddReviewScreen = ({navigation}) => {
         }
       }catch (error) {
         console.error(error);
-       } finally {
-       }
+       } 
 
     };
 
