@@ -11,19 +11,17 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const AddBuddyScreen = ({navigation}) => {
     const [isLoading, setLoading] = useState(true); 
     const [buddies, setBuddies] = useState([]); 
-    const [buddyId, setBuddyId] = useState(""); 
-    const [buddyName, setBuddyName] = useState(""); 
 
-    const addBuddy = async () => {
+    const addBuddy = async (buddyid, name) => {
       try {
         await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("buddies")
         .add({
-          bId : buddyId,
-          bName : buddyName
+          bId : buddyid,
+          bName : name
         })
-        alert("Added "+buddyName+" as a Buddy");
+        alert("Added "+name+" as a Buddy");
       }catch (error) {
         console.error(error);
        } 
@@ -55,7 +53,7 @@ const AddBuddyScreen = ({navigation}) => {
                 <Text style={styles.name}>{item.buddyName}</Text>
                 <Text>{item.email}</Text>
             </View>
-            <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{setBuddyName(item.buddyName),setBuddyId(item.key),addBuddy()}} />
+            <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{addBuddy(item.key, item.buddyName)}} />
             </View>
           );
       };
