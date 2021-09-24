@@ -91,8 +91,13 @@ const SearchScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-      getContentTv();
+      if(stype=="Movie"){
+        getContentMovie();
+      }else{
+        getContentTv();
+      }
     }, [search]);
+    
     useEffect(() => {
       setSearch("");
       setLoading(true);

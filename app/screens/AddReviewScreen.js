@@ -91,7 +91,11 @@ const AddReviewScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-      getContentTv();
+      if(stype=="Movie"){
+        getContentMovie();
+      }else{
+        getContentTv();
+      }
     }, [search]);
     useEffect(() => {
       setSearch("");
@@ -167,10 +171,9 @@ const AddReviewScreen = ({navigation}) => {
             <Text>Selected Content: {contentName} {contentId} {type} {starRating}</Text>
             <Rating
               startingValue={0}
-              showRating 
               fractions={1}
               ratingCount={5}
-              imageSize={30}
+              imageSize={40}
               jumpValue={0.5}
               onFinishRating={rating => setRating(rating*2)}
             />
