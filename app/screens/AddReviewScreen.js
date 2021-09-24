@@ -127,6 +127,7 @@ const AddReviewScreen = ({navigation}) => {
         setContentName("");
         setComment("");
         setContent([]);
+        getContentTv();
     }
 
     return (
@@ -179,7 +180,7 @@ const AddReviewScreen = ({navigation}) => {
               value={comment}
               onChangeText={(text)=>setComment(text)}
             />
-            <Button title="submit" onPress={()=>{addReview, refresh()}} />
+            <Button title="submit" onPress={()=>{addReview(), refresh()}} />
             </View>
             </TouchableWithoutFeedback>
         </View>
