@@ -7,10 +7,12 @@ import RecommendationsScreen from './app/screens/RecommendationsScreen';
 import ProfileScreen from './app/screens/ProfileScreen';
 import AddReviewScreen from './app/screens/AddReviewScreen';
 import BuddyScreen from './app/screens/BuddyScreen';
+import AddBuddyScreen from './app/screens/AddBuddyScreen';
 import SearchScreen from './app/screens/SearchScreen';
 import LoginScreen from './app/screens/auth/LoginScreen';
 import CreateAccountScreen from './app/screens/auth/CreateAccountScreen';
 
+const Buddy = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +28,15 @@ const headerOptions = {
   },
 }
 
+function BuddyScreens(){
+  return(
+      <Buddy.Navigator>
+        <Buddy.Screen name="Buddy" component={BuddyScreen} />
+        <Buddy.Screen name="AddBuddy" component={AddBuddyScreen} />
+      </Buddy.Navigator>
+  )
+
+}
 function MyTabs() {
   return (
     <Tab.Navigator initialRouteName={"Recommendations"} screenOptions={{
@@ -40,7 +51,7 @@ function MyTabs() {
       <Tab.Screen name="Recommendations" component={RecommendationsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Add" component={AddReviewScreen} />
-      <Tab.Screen name="Buddies" component={BuddyScreen} />
+      <Tab.Screen name="Buddies" component={BuddyScreens} options={{ headerShown: false }}/>
       <Tab.Screen name="Search" component={SearchScreen} />
     </Tab.Navigator>
   );

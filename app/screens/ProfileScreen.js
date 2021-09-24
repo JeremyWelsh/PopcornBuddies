@@ -9,7 +9,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 // user viewing their own profile
 const ProfileScreen = ({navigation}) => {
     
-    const [loading, setLoading] = useState(true); 
+    const [isLoading, setLoading] = useState(true); 
     const [buddies, setBuddies] = useState([]); 
 
 
@@ -49,10 +49,12 @@ const ProfileScreen = ({navigation}) => {
         <View style={styles.container}>
             <Text>Popcorn Buddies ProfileScreen</Text>
             <StatusBar style="auto" />
+            {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
                 data={buddies}
                 renderItem={renderItem}
             />
+            )}
             <Button containerStyle={styles.button} title="Log out" onPress={LogOut} />
         </View>
 

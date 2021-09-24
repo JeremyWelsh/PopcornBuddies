@@ -8,7 +8,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 
 // screen where a user sees all of their buddies
 const BuddyScreen = ({navigation}) => {
-    const [loading, setLoading] = useState(true); 
+    const [isLoading, setLoading] = useState(true); 
     const [buddies, setBuddies] = useState([]); 
 
     /*
@@ -53,13 +53,13 @@ const BuddyScreen = ({navigation}) => {
         <View style={styles.container}>
             <Text>Popcorn Buddies BuddyScreen</Text>
             <StatusBar style="auto" />
-            
+            {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
             <FlatList
                 data={buddies}
                 renderItem={renderItem}
             />
-
-            <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{console.log("lol")}} />
+            )}
+            <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{navigation.navigate("AddBuddy");}} />
         </View>
 
         );
