@@ -166,12 +166,13 @@ const AddReviewScreen = ({navigation}) => {
             <View style={styles.inputView}>
             <Text>Selected Content: {contentName} {contentId} {type} {starRating}</Text>
             <Rating
-              startingValue={2.5}
+              startingValue={0}
               showRating 
               fractions={1}
               ratingCount={5}
               imageSize={30}
-              onFinishRating={rating => setRating(rating)}
+              jumpValue={0.5}
+              onFinishRating={rating => setRating(rating*2)}
             />
             <Input
               placeholder="comment"
