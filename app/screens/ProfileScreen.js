@@ -20,15 +20,12 @@ const ProfileScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        const docId = db.collection('Users')
-        // Filter results
-        .where('uid', '==', auth.currentUser())
-        .get()
+        
 
         //need to recreate users and possibly add the collections from the start?
         // need to do this for the uid settings so i can get the documents they would be in
 
-        const subscriber = db.collection('users').doc(docId).collection('reviews').onSnapshot(snapshot => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('reviews').onSnapshot(snapshot => {
             const reviews = [];
             snapshot.forEach(doc => {
               reviews.push({
@@ -47,24 +44,21 @@ const ProfileScreen = ({navigation}) => {
       const renderItem = ({ item }) => {
         return(
           <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text>User ID: {item.id}</Text>
+          <Text>User ID: {item.rating*2}</Text>
           <Text>User Name: {item.cName}</Text>
           </View>
         );
     };
 
-/*
-<FlatList
-                data={reviews}
-                renderItem={renderItem}
-            />
-            */
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies ProfileScreen</Text>
             <StatusBar style="auto" />
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
-            <Text>hi</Text>
+            <FlatList
+            data={reviews}
+            renderItem={renderItem}
+        />
             )}
             <Button containerStyle={styles.button} title="Log out" onPress={LogOut} />
         </View>
