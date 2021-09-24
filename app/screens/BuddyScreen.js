@@ -41,34 +41,30 @@ const BuddyScreen = ({navigation}) => {
         return () => subscriber();
       }, []);
 
-
-
-
-
-
-    if (loading) {
-        return <ActivityIndicator />;
-    }else{
-
+      const renderItem = ({ item }) => {
+          return(
+            <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <Text>User ID: {item.id}</Text>
+            <Text>User Name: {item.buddyName}</Text>
+            </View>
+          );
+      };
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies BuddyScreen</Text>
             <StatusBar style="auto" />
+            
             <FlatList
                 data={buddies}
-                renderItem={({ item }) => (
-            <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>User ID: {item.id}</Text>
-            <Text>User Name: {item.buddyName}</Text>
-        </View>
-      )}
-    />
+                renderItem={renderItem}
+            />
+
             <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{console.log("lol")}} />
         </View>
 
         );
     } 
-    }
+    
 const styles = StyleSheet.create({
     container: {
         flex: 1,
