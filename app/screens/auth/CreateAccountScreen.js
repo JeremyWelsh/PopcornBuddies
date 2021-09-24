@@ -25,7 +25,9 @@ const CreateAccountScreen = ({navigation}) => {
             })
             db.collection("users")
             .doc(auth.currentUser.uid)
-            .set({buddyName,email})
+            .set({buddyName: buddyName,
+                email: email,
+                uid: auth.currentUser()})
         } )
         //if the requirements were not met then alert the user on the screen with the error
         .catch(error => alert(error.message));

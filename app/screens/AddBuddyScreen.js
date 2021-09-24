@@ -4,7 +4,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import {auth, db} from '../../firebase'
 import { ActivityIndicator } from 'react-native';
 import colours from '../config/colours';
-import { Button } from 'react-native-elements/dist/buttons/Button';
+import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
@@ -13,7 +13,7 @@ const AddBuddyScreen = ({navigation}) => {
     const [buddies, setBuddies] = useState([]); 
     const [buddyId, setBuddyId] = useState(""); 
     const [buddyName, setBuddyName] = useState(""); 
-    
+
     const addBuddy = async () => {
       try {
         await db.collection("users")
@@ -53,8 +53,7 @@ const AddBuddyScreen = ({navigation}) => {
             <View style={styles.item}>
               <View >
                 <Text style={styles.name}>{item.buddyName}</Text>
-                
-                <Text>User ID: {item.key}</Text>
+                <Text>{item.email}</Text>
             </View>
             <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{setBuddyName(item.buddyName),setBuddyId(item.key),addBuddy()}} />
             </View>
@@ -73,8 +72,6 @@ const AddBuddyScreen = ({navigation}) => {
                 windowSize={5}
             />
             )}
-
-            <Button containerStyle={styles.button} title="Add Buddy" onPress={()=>{console.log(buddies)}} />
         </View>
 
         );
@@ -88,6 +85,7 @@ const styles = StyleSheet.create({
       item: {
         backgroundColor:'#46f21e',
         alignItems:'flex-start', 
+        justifyContent: 'space-between',
         flex:1, 
         padding: 15,
         marginVertical: 7,
@@ -103,7 +101,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
       },
       button: {
-
+        alignSelf:'flex-end',
+        color:'#000'
       }
       
 })

@@ -10,7 +10,7 @@ import { Button } from 'react-native-elements/dist/buttons/Button';
 const ProfileScreen = ({navigation}) => {
     
     const [isLoading, setLoading] = useState(true); 
-    const [buddies, setBuddies] = useState([]); 
+    const [reviews, setReviews] = useState([]); 
 
 
     const LogOut = () => {
@@ -20,17 +20,26 @@ const ProfileScreen = ({navigation}) => {
     }
 
     useEffect(() => {
-        const subscriber = db.collection('users').onSnapshot(snapshot => {
-            const buddies = [];
+        const docId = db.collection('Users')
+        // Filter results
+        .where('uid', '==', auth.currentUser())
+        .get()
+
+        //need to recreate users and possibly add the collections from the start?
+        // need to do this for the uid settings so i can get the documents they would be in
+
+        const subscriber = db.collection('users').doc(docId).collection('reviews').onSnapshot(snapshot => {
+            const reviews = [];
             snapshot.forEach(doc => {
-              buddies.push({
+              reviews.push({
                 ...doc.data(),
                 key: doc.id,
               });
             });
       
-            setBuddies(buddies);
+            setReviews(reviews);
             setLoading(false);
+            console.log(reviews)
           });
         return () => subscriber();
       }, []);
@@ -39,21 +48,23 @@ const ProfileScreen = ({navigation}) => {
         return(
           <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <Text>User ID: {item.id}</Text>
-          <Text>User Name: {item.buddyName}</Text>
+          <Text>User Name: {item.cName}</Text>
           </View>
         );
     };
 
-
+/*
+<FlatList
+                data={reviews}
+                renderItem={renderItem}
+            />
+            */
     return (
         <View style={styles.container}>
             <Text>Popcorn Buddies ProfileScreen</Text>
             <StatusBar style="auto" />
             {isLoading ? <ActivityIndicator ActivityIndicator animating size='large' color="#000" /> : (
-            <FlatList
-                data={buddies}
-                renderItem={renderItem}
-            />
+            <Text>hi</Text>
             )}
             <Button containerStyle={styles.button} title="Log out" onPress={LogOut} />
         </View>

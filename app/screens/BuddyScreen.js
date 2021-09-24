@@ -4,7 +4,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import {auth, db} from '../../firebase'
 import { ActivityIndicator } from 'react-native';
 import colours from '../config/colours';
-import { Button } from 'react-native-elements/dist/buttons/Button';
+import { Button } from 'react-native-elements';
 
 // screen where a user sees all of their buddies
 const BuddyScreen = ({navigation}) => {
