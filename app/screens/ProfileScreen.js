@@ -19,12 +19,18 @@ const ProfileScreen = ({navigation}) => {
         })
     }
 
+    /*
+    .add({
+          cID: contentId,
+          cName: contentName,
+          cYear: year,
+          type: type,
+          rating: starRating,
+          comment: comment,
+          poster: ppath
+        })
+        */
     useEffect(() => {
-        
-
-        //need to recreate users and possibly add the collections from the start?
-        // need to do this for the uid settings so i can get the documents they would be in
-
         const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('reviews').onSnapshot(snapshot => {
             const reviews = [];
             snapshot.forEach(doc => {
@@ -33,7 +39,6 @@ const ProfileScreen = ({navigation}) => {
                 key: doc.id,
               });
             });
-      
             setReviews(reviews);
             setLoading(false);
             console.log(reviews)

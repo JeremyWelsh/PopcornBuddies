@@ -38,6 +38,8 @@ const AddReviewScreen = ({navigation}) => {
     const[content, setContent] = useState([]);
     const[type, setType] = useState("");
     const[stype, setSType] = useState("");
+    const[year, setYear] = useState("");
+    const[ppath, setPosterPath] = useState("");
 
     const addReview = async () => {
       try {
@@ -48,9 +50,11 @@ const AddReviewScreen = ({navigation}) => {
         .add({
           cID: contentId,
           cName: contentName,
+          cYear: year,
           type: type,
           rating: starRating,
-          comment: comment
+          comment: comment,
+          poster: ppath
         })
         alert("AYEEEEE");
       }else{
@@ -117,7 +121,14 @@ const AddReviewScreen = ({navigation}) => {
         return (
           <Item
             item={item}
-            onPress={() => {setContentID(item.id), setContentName(item.title || item.name), setType(item.title?"Movie":"TV")}}
+            onPress={() => {
+              setContentID(item.id), 
+              setContentName(item.title || item.name), 
+              setYear((item.release_date||item.first_air_date)? item.release_date||item.first_air_date:"No date"),
+              setType(item.title?"Movie":"TV"),
+              setPosterPath(item.poster_path)
+            
+            }}
             backgroundColor={{ backgroundColor }}
             textColor={{ color }}
           />

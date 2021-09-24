@@ -30,7 +30,7 @@ const headerOptions = {
 
 function BuddyScreens(){
   return(
-      <Buddy.Navigator>
+      <Buddy.Navigator initialRouteName={"Buddy"}>
         <Buddy.Screen name="Buddy" component={BuddyScreen} />
         <Buddy.Screen name="AddBuddy" component={AddBuddyScreen} />
       </Buddy.Navigator>
