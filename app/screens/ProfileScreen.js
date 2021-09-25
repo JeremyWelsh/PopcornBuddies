@@ -90,7 +90,13 @@ const ProfileScreen = ({ navigation }) => {
   //return the screen 
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies ProfileScreen</Text>
+      <View style={styles.topView}>
+        <View style={styles.userInfo}>
+          <Text style={styles.userText}>{auth.currentUser.displayName}</Text>
+          <Text style={styles.userEmail}>{auth.currentUser.email}</Text>
+          </View>
+        <Button containerStyle={styles.button} title="Log out" onPress={LogOut} />
+      </View>
       <StatusBar style="auto" />
       {isLoading ? (
         <ActivityIndicator
@@ -102,7 +108,7 @@ const ProfileScreen = ({ navigation }) => {
       ) : (
         <FlatList data={reviews} renderItem={renderItem} />
       )}
-      <Button containerStyle={styles.button} title="Log out" onPress={LogOut} />
+      
     </View>
   );
 };
@@ -114,9 +120,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    width: 350,
-    marginTop: 5,
+    justifyContent: "center",
+    flex: 0.35,
     backgroundColor: colours.theBlue,
+    width:100,
   },
   item: {
     backgroundColor: colours.itemColor,
@@ -133,6 +140,24 @@ const styles = StyleSheet.create({
   extrainfo: {
     fontSize: 15,
   },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal:15,
+    paddingVertical:7,
+  },
+  userInfo: {
+    flex:1,
+  },
+  userText: {
+    fontWeight: "bold",
+    fontSize: 30,
+  },
+  userEmail: {
+    paddingLeft:5,
+    fontSize: 13,
+  },
+
 });
 
 export default ProfileScreen;

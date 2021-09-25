@@ -40,23 +40,17 @@ const BuddyScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        style={{
-          height: 50,
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={()=> {navigation.navigate('BuddyProfile',{key: item.key, name: item.buddyName})}}
+      style={styles.item}
+        onPress={()=> {navigation.navigate('Buddy Profile',{key: item.key, name: item.buddyName})}}
       >
-        <Text>Buddy Name: {item.buddyName}</Text>
-        <Text>Buddy Email: {item.email}</Text>
+        <Text style={styles.name}>{item.buddyName}</Text>
+        <Text style={styles.email}>{item.email}</Text>
       </TouchableOpacity>
     );
   };
   // return the rest of the screen
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies BuddyScreen</Text>
       <StatusBar style="auto" />
       {isLoading ? (
         <ActivityIndicator
@@ -66,13 +60,13 @@ const BuddyScreen = ({ navigation }) => {
           color="#000"
         />
       ) : (
-        <FlatList data={buddies} renderItem={renderItem} />
+        <FlatList style={styles.FlatList}data={buddies} renderItem={renderItem} />
       )}
       <Button
         containerStyle={styles.button}
         title="Add Buddy"
         onPress={() => {
-          navigation.navigate("AddBuddy");
+          navigation.navigate("Add Buddy");
         }}
       />
     </View>
@@ -83,8 +77,34 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colours.bgColor,
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    flexDirection:'column',
   },
+  button: {
+    flex: 0.18,
+    marginHorizontal:25,
+  },
+  item: {
+    backgroundColor: colours.itemColor,
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    flex: 1,
+    padding: 15,
+    marginVertical: 7,
+    marginHorizontal: 10,
+    flexDirection: "row",
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+  email: {
+    fontWeight: "normal",
+    fontSize: 15,
+  },
+  FlatList:{
+    flex: 1,
+  }
 });
 
 export default BuddyScreen;

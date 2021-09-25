@@ -85,8 +85,11 @@ const BuddyProfileScreen = ({route }) => {
   // return the screen
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies BuddyProfileScreen</Text>
-      <Text>HELLO: {uname}</Text>
+      <View style={styles.topView}>
+        <View style={styles.userInfo}>
+          <Text style={styles.userText}>{uname}</Text>
+        </View>
+      </View>
       <StatusBar style="auto" />
       {isLoading ? (
         <ActivityIndicator
@@ -108,9 +111,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   button: {
-    width: 350,
-    marginTop: 5,
+    justifyContent: "center",
+    flex: 0.35,
     backgroundColor: colours.theBlue,
+    width:100,
   },
   item: {
     backgroundColor: colours.itemColor,
@@ -126,6 +130,19 @@ const styles = StyleSheet.create({
   },
   extrainfo: {
     fontSize: 15,
+  },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal:15,
+    paddingVertical:7,
+  },
+  userInfo: {
+    flex:1,
+  },
+  userText: {
+    fontWeight: "bold",
+    fontSize: 30,
   },
 });
 

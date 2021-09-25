@@ -33,10 +33,10 @@ const headerOptions = {
 // all of the screens that are tied to the buddy screen in the tab navigator
 function BuddyScreens() {
   return (
-    <Buddy.Navigator initialRouteName={"Buddy"} screenOptions={headerOptions}>
-      <Buddy.Screen name="Buddy" component={BuddyScreen} />
-      <Buddy.Screen name="AddBuddy" component={AddBuddyScreen} />
-      <Buddy.Screen name="BuddyProfile" component={BuddyProfileScreen} />
+    <Buddy.Navigator initialRouteName={"Buddies"} screenOptions={headerOptions}>
+      <Buddy.Screen name="Buddies" component={BuddyScreen} />
+      <Buddy.Screen name="Add Buddy" component={AddBuddyScreen} />
+      <Buddy.Screen name="Buddy Profile" component={BuddyProfileScreen} />
     </Buddy.Navigator>
   );
 }
@@ -68,7 +68,7 @@ function MyTabs() {
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Add" component={AddReviewScreen} />
       <Tab.Screen
-        name="Buddies"
+        name="Buddy"
         component={BuddyScreens}
         options={{ headerShown: false }}
       />
