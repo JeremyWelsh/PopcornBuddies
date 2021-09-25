@@ -65,10 +65,10 @@ const RecommendationsScreen = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
       <View style={[styles.item]}>
-        <View style={{ alignItems: "flex-start", flex: 1, paddingRight: 15 }}>
+        <View style={{ alignItems: "flex-start", flex: 1, paddingRight:10}}>
           <Text style={styles.title}>{item.cName}</Text>
           <Rating
-            imageSize={20}
+            imageSize={25}
             type="custom"
             readonly
             //halved because ratings are out of 10
@@ -77,14 +77,15 @@ const RecommendationsScreen = ({ navigation }) => {
             tintColor={colours.itemColor}
             ratingBackgroundColor="#000"
           />
-          <Text style={styles.extrainfo}>Year: {item.cYear}</Text>
+          <Text style={styles.extrainfo}>Buddy: {item.reviewerName}</Text>
+          <Text style={styles.extrainfo}>Released: {item.cYear}</Text>
           <Text style={styles.extrainfo}>Content Type: {item.type}</Text>
           <Text style={styles.extrainfo}>Comment: {item.comment}</Text>
-          <Text style={styles.extrainfo}>User ID: {item.reviewerName}</Text>
+          
         </View>
         <Image
           source={item.poster ? { uri: `${Image_Link + item.poster}` } : null}
-          style={{ width: 125, height: 180 }}
+          style={{ width: 130, height: 180 }}
         />
       </View>
     );
@@ -93,7 +94,9 @@ const RecommendationsScreen = ({ navigation }) => {
   // return the screen
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies RecommendationsScreen</Text>
+      <View style={styles.topView}>
+          <Text style={styles.topText}>Top Buddy Recommendations</Text>
+      </View>
       <StatusBar style="auto" />
       {isLoading ? (
         <ActivityIndicator
@@ -138,10 +141,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: 27,
+    fontSize: 23,
   },
   extrainfo: {
-    fontSize: 15,
+    fontSize: 18,
+  },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal:15,
+    paddingVertical:10,
+    backgroundColor: colours.theBlue,
+  },
+  topText: {
+    fontWeight: "normal",
+    fontSize: 25,
+    color:'#fff',
   },
 });
 

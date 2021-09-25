@@ -44,7 +44,7 @@ function BuddyScreens() {
 function MyTabs() {
   return (
     <Tab.Navigator
-      initialRouteName={"Recommendations"}
+      initialRouteName={"PopcornBuddies"}
       screenOptions={{
         tabBarHideOnKeyboard: true,
         tabBarStyle: [
@@ -64,7 +64,7 @@ function MyTabs() {
         },
       }}
     >
-      <Tab.Screen name="Recommendations" component={RecommendationsScreen} />
+      <Tab.Screen name="Popcorn Buddies" component={RecommendationsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Add" component={AddReviewScreen} />
       <Tab.Screen
