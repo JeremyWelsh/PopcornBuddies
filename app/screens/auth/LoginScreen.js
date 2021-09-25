@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { auth } from "../../../firebase.js";
-import colours from '../config/colours';
+import colours from '../../config/colours';
 
 //followed the start of this tutorial to help code the login and create account screens
 //https://www.youtube.com/watch?v=MJzmZ9qmdaE

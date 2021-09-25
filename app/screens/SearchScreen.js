@@ -25,7 +25,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         type="custom"
         readonly
         //halved because ratings are out of 10
-        startingValue={item.rating / 2}
+        startingValue={item.voteRating / 2}
         ratingColor="#fff"
         tintColor={colours.bgColor}
         ratingBackgroundColor="#000"
@@ -143,7 +143,7 @@ const SearchScreen = ({ navigation }) => {
             onChangeText={(text) => setSearch(text)}
             lightTheme="true"
           />
-          <View style={{ flexDirection: "row", backgroundColor: "#2393D9" }}>
+          <View style={{ flexDirection: "row", backgroundColor: colours.jetGrey }}>
             <ThemeProvider theme={stype == "Tv" ? themeSelected : themeNot}>
               <Button
                 containerStyle={styles.button}
@@ -168,10 +168,11 @@ const SearchScreen = ({ navigation }) => {
             color="#000"
           />
         ) : (
+          
           <FlatList
             data={content}
             renderItem={renderItem}
-            keyExtractor={(item) => `${item.id}`}
+            keyExtractor={(item) => item.id.toString()}
             initialNumToRender={3}
             maxToRenderPerBatch={3}
             windowSize={5}

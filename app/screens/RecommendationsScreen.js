@@ -74,7 +74,7 @@ const RecommendationsScreen = ({ navigation }) => {
             //halved because ratings are out of 10
             startingValue={item.rating / 2}
             ratingColor="#fff"
-            tintColor={colours.bgColor}
+            tintColor={colours.itemColor}
             ratingBackgroundColor="#000"
           />
           <Text style={styles.extrainfo}>Year: {item.cYear}</Text>
