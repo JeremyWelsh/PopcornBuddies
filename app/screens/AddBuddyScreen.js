@@ -10,7 +10,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 const AddBuddyScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
-  const [allbuddies, setAllBuddies] = useState([]);
   const [addedbuddies, setAddedBuddies] = useState([]);
 
   const addBuddy = async (buddyid, buddyName, email) => {
@@ -26,6 +25,7 @@ const AddBuddyScreen = ({ navigation }) => {
           key: buddyid
         });
       alert("Added " + buddyName + " as a Buddy");
+      setLoading(true)
     } catch (error) {
       console.error(error);
     }
@@ -44,50 +44,24 @@ const AddBuddyScreen = ({ navigation }) => {
       }
     });
     setBuddies(buddies);
-    setLoading(false);
+    setLoading(false)
   };
   const getAddedBuddies = async () => {
     const addedbuddies = [];
     const querySnapshot = await db.collection("users").doc(auth.currentUser.uid).collection("buddies").get();
     querySnapshot.forEach((doc) => {
-      
-      console.log(doc.id + "jfhasoijngfoiungosd        gjsdgo jnbsdogn buiosdnbgoi u    sguih du gsioudb giousdh")
-      console.log("----------------------------")
-      console.log(doc.id + "                  gfsadgsfdgfsd")
       addedbuddies.push({
         ...doc.data(),
         key: doc.id,
       });
     });
-    console.log("------------already adddeeeddd----------------")
-    console.log(addedbuddies)
-    console.log("----------------------------")
     setAddedBuddies(addedbuddies);
-    setLoading(false);
   };
-/*
-  const getBuddies = async () => {
-    const buddies = allbuddies.filter(item => (!addedbuddies.includes(item.id)));
-    console.log("---------buddies-------------------")
-    console.log(buddies)
-    console.log("----------------------------")
-    setBuddies(buddies);
-    setLoading(false);
-  };
-*/
+
   useEffect(() => {
-    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
-    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
-    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
-    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
-    //getAllBuddies();
     getAddedBuddies();
-    
-    getBuddies();
-    console.log("---------Final collection of not added-----------------")
-    console.log(buddies)
-    console.log("----------------------------")
-  }, []);
+    getBuddies()
+  }, [isLoading]);
 
 
 
