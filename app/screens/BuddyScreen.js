@@ -55,8 +55,8 @@ const BuddyScreen = ({ navigation }) => {
           justifyContent: "center",
         }}
       >
-        <Text>User ID: {item.bId}</Text>
-        <Text>User Name: {item.bName}</Text>
+        <Text>Buddy Name: {item.buddyName}</Text>
+        <Text>Buddy Email: {item.email}</Text>
       </View>
     );
   };
