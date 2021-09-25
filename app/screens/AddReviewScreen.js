@@ -1,31 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-  FlatList,
-  TouchableOpacity,
-  Keyboard,
-  Alert,
-} from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard } from "react-native";
 import { auth, db } from "../../firebase.js";
-import {
-  Button,
-  SearchBar,
-  Input,
-  Rating,
-  ThemeProvider,
-} from "react-native-elements";
+import { Button, SearchBar, Input, Rating, ThemeProvider} from "react-native-elements";
 import colours from "../config/colours";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const Movie_Search_Link =
-  "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
-const TV_Search_Link =
-  "https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const Movie_Search_Link = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const TV_Search_Link = "https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
 
+
+// this is how the movies/tvshows are rendered in the flatlist
+// this is outside of the screen method so it doesnt get rerendered too often
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
   <TouchableOpacity onPress={onPress} style={[styles.item, backgroundColor]}>
     <Text style={[styles.title, textColor]}>{item.title || item.name} </Text>
@@ -37,18 +23,12 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
   </TouchableOpacity>
 );
 
-const themeSelected = {
-  colors: {
-    primary: "#e3337d",
-  },
-};
-const themeNot = {
-  colors: {
-    primary: "#000",
-  },
-};
+// themes for the buttons at the top
+const themeSelected = {colors: {primary: colours.orange}};
+const themeNot = {colors: {primary: colours.jetGrey}};
 
 const AddReviewScreen = ({ navigation }) => {
+  // setters for all the variables
   const [contentId, setContentID] = useState("");
   const [contentName, setContentName] = useState("");
   const [starRating, setRating] = useState(0);
@@ -61,10 +41,10 @@ const AddReviewScreen = ({ navigation }) => {
   const [year, setYear] = useState("");
   const [ppath, setPosterPath] = useState("");
 
+  // sets up the data to be added in a doc in the current users reviews collection.
   const addReview = async () => {
     try {
-      //doc(contentId)
-      //.set
+      // if theres not content id then a movie/tv show is not selected and it alerts the user
       if (contentId != "") {
         await db
           .collection("users")
@@ -80,86 +60,106 @@ const AddReviewScreen = ({ navigation }) => {
             poster: ppath,
             reviewerName: auth.currentUser.displayName.toString(),
           });
-        alert("AYEEEEE");
+        alert("Review Recorded!");
       } else {
-        alert("no bueno m8");
+        alert("Please select a TV show or Movie");
       }
     } catch (error) {
       console.error(error);
     }
   };
 
+  // gets the content using the search link for tv shows
   const getContentTv = async () => {
     try {
+      // set search type to show the useEffect which link content getter to use
       setSType("Tv");
+      // get the content from the search added to the movie api link
       var response = await fetch(TV_Search_Link + search);
+      // if the search is empty just show the trending tv shows from the past week
       if (search == "") {
-        response = await fetch(
-          "https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5"
-        );
+        response = await fetch("https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5");
       }
       const json = await response.json();
+      // set the content array to the results taken from the json array
       setContent(json.results);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
-    }
-  };
-  const getContentMovie = async () => {
-    try {
-      setSType("Movie");
-      var response = await fetch(Movie_Search_Link + search);
-      if (search == "") {
-        response = await fetch(
-          "https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5"
-        );
-      }
-      const json = await response.json();
-      setContent(json.results);
-    } catch (error) {
-      console.error(error);
-    } finally {
+      // show that the query has finished
       setLoading(false);
     }
   };
 
+  // gets the content using the search link for movies
+  const getContentMovie = async () => {
+    try {
+      // set search type to show the useEffect which link content getter to use
+      setSType("Movie");
+      // get the content from the search added to the movie api link
+      var response = await fetch(Movie_Search_Link + search);
+      // if the search is empty just show the trending movies from the past week
+      if (search == "") {
+        response = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5");
+      }
+      const json = await response.json();
+      // set the content array to the results taken from the json array
+      setContent(json.results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // show that the query has finished
+      setLoading(false);
+    }
+  };
+
+  //use effect which will be called whenever the search bar is updated
   useEffect(() => {
+    // if the search type is a movie
     if (stype == "Movie") {
+      // use movie getter
       getContentMovie();
     } else {
+      //use tv getter
       getContentTv();
     }
   }, [search]);
 
+  // when the page is opened for the first time
   useEffect(() => {
+    // set search bar to null
     setSearch("");
+    //set loading to true so it loads content into the flat list
     setLoading(true);
   }, []);
 
+  // render the flatlist movies/tvshows
   const renderItem = ({ item }) => {
-    //removed for better performance
-    const backgroundColor = item.id === contentId ? "#7BAE7F" : "#95D7AE";
+    // background colour and text colour set depending if the content is selected
+    const backgroundColor = item.id === contentId ? colours.theBlue : colours.itemColor;
     const color = item.id === contentId ? "white" : "black";
     return (
       <Item
         item={item}
         onPress={() => {
+          // set all the variables
           setContentID(item.id),
-            setContentName(item.title || item.name),
-            setYear(
-              item.release_date || item.first_air_date
-                ? item.release_date || item.first_air_date
-                : "No date"
-            ),
-            setType(item.title ? "Movie" : "TV"),
-            setPosterPath(item.poster_path);
+          // movie title, tv name
+          setContentName(item.title || item.name),
+          // depending on whether or not its a tv show or movie the dates change
+          setYear((item.release_date || item.first_air_date) ? (item.release_date || item.first_air_date) : "No date"),
+          // set the type depending on the title
+          setType(item.title ? "Movie" : "TV"),
+          // get the image path
+          setPosterPath(item.poster_path);
         }}
         backgroundColor={{ backgroundColor }}
         textColor={{ color }}
       />
     );
   };
+
+  // refresh the variables when the user presses the submit button
   const refresh = () => {
     setRating(0);
     setSearch("");
@@ -170,6 +170,7 @@ const AddReviewScreen = ({ navigation }) => {
     getContentTv();
   };
 
+  //return the screen
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -184,7 +185,7 @@ const AddReviewScreen = ({ navigation }) => {
             }}
             lightTheme="true"
           />
-          <View style={{ flexDirection: "row", backgroundColor: "#2393D9" }}>
+          <View style={{ flexDirection: "row", backgroundColor: colours.jetGrey }}>
             <ThemeProvider theme={stype == "Tv" ? themeSelected : themeNot}>
               <Button
                 containerStyle={styles.button}
@@ -220,20 +221,26 @@ const AddReviewScreen = ({ navigation }) => {
             />
           )}
         </View>
-        <View style={styles.inputView}>
-          <Text>
-            Selected Content: {contentName} {contentId} {type} {starRating}
-          </Text>
-          <Rating
-            startingValue={starRating/2}
-            fractions={1}
-            ratingCount={5}
-            imageSize={40}
-            jumpValue={0.5}
-            onFinishRating={(rating) => setRating(rating * 2)}
-          />
+        <View>
+          <Text style={styles.forum}> Selected Content: {contentName} </Text>
+          <View>
+            <Text style={styles.forum}>Your Rating :</Text>
+            <Rating
+              startingValue={starRating/2}
+              fractions={2}
+              ratingCount={5}
+              imageSize={40}
+              // jump value is 0.25 so each step will be 0.5 out of ten
+              jumpValue={0.25}
+              // rating is out of ten and there are 5 stars so the rating is doubled
+              onFinishRating={(rating) => setRating(rating * 2)}
+              ratingColor="#fff"
+              tintColor={colours.bgColor}
+              ratingBackgroundColor="#000"
+            />
+          </View>
           <Input
-            placeholder="comment"
+            placeholder="Comment"
             autoFocus
             type="comment"
             value={comment}
@@ -250,19 +257,11 @@ const AddReviewScreen = ({ navigation }) => {
     </View>
   );
 };
-/*<Input
-  keyboardType='numeric'
-  onChangeText={(number)=> setRating(number)}
-  value={starRating}
-  min="0.0"
-  max="5.0"
-  maxLength={2}  //setting limit of input
-  />
-  */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ee3",
+    backgroundColor: colours.bgColor,
     justifyContent: "flex-start",
   },
   item: {
@@ -283,15 +282,14 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
   },
   button: {
-    //marginTop: 5,
     flex: 1,
   },
   searchBox: {
-    //padding: 5,
-    //alignItems: 'center',
     justifyContent: "center",
-    //backgroundColor: '#029420'
   },
+  forum: {
+    fontSize: 20,
+  }
 });
 
 export default AddReviewScreen;

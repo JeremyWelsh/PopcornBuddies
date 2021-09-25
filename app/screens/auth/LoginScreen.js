@@ -4,15 +4,17 @@ import { StyleSheet, Text, View } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { auth } from "../../../firebase.js";
-//import colours from '../config/colours';
+import colours from '../config/colours';
 
 //followed the start of this tutorial to help code the login and create account screens
 //https://www.youtube.com/watch?v=MJzmZ9qmdaE
 
 const LoginScreen = ({ navigation }) => {
+
   // email and password setters and values
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   // if the user is signed in then take them to the tab screens
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authenticated) => {
@@ -22,12 +24,13 @@ const LoginScreen = ({ navigation }) => {
     });
     return unsubscribe;
   }, []);
+
   // login method called when the signin button is pressed
   const LogIn = () => {
-    auth
-      .signInWithEmailAndPassword(email, password)
+    auth.signInWithEmailAndPassword(email, password)
       .catch((error) => alert(error));
   };
+  
   //screen to be returned with email, password, login and register buttons
   return (
     <View style={styles.container}>
@@ -66,11 +69,11 @@ const styles = StyleSheet.create({
   button: {
     width: 350,
     marginTop: 5,
-    backgroundColor: "#19323C",
+    backgroundColor: colours.theBlue,
   },
   container: {
     flex: 1,
-    backgroundColor: "#C03221",
+    backgroundColor: colours.bgColor,
     alignItems: "center",
     justifyContent: "center",
     padding: 15,

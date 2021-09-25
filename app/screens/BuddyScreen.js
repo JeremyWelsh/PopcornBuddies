@@ -9,43 +9,34 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 // screen where a user sees all of their buddies
 const BuddyScreen = ({ navigation }) => {
+  // set the variables
   const [isLoading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
 
-  /*
-    const getBuddies = async () => {
-        const usersRef = db.collection('users');
-        const snapshot = await usersRef.get();
-        if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-        }  
-
-        snapshot.forEach(doc => {   
-            console.log(doc.data().buddyName, '=>', doc.data().email);
-        });
-    }
-*/
+  //use effect on first opening of screen
   useEffect(() => {
+    // get a snapshot of all of the buddies the current user has added
     const subscriber = db
       .collection("users")
       .doc(auth.currentUser.uid)
       .collection("buddies")
       .onSnapshot((snapshot) => {
         const buddies = [];
+        // for each doc get the data
         snapshot.forEach((doc) => {
           buddies.push({
             ...doc.data(),
             key: doc.id,
           });
         });
-
+        // set the array and finish the query
         setBuddies(buddies);
         setLoading(false);
       });
     return () => subscriber();
   }, []);
 
+  // render the other buddies
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity
@@ -62,6 +53,7 @@ const BuddyScreen = ({ navigation }) => {
       </TouchableOpacity>
     );
   };
+  // return the rest of the screen
   return (
     <View style={styles.container}>
       <Text>Popcorn Buddies BuddyScreen</Text>
@@ -90,7 +82,7 @@ const BuddyScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#909",
+    backgroundColor: colours.bgColor,
     justifyContent: "center",
   },
 });

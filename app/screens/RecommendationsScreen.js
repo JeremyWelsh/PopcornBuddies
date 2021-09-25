@@ -7,14 +7,17 @@ import { Image } from "react-native-elements/dist/image/Image";
 import colours from "../config/colours";
 import { Rating } from "react-native-elements";
 
+//image link prefix
 const Image_Link = "https://image.tmdb.org/t/p/w200";
 
+
 const RecommendationsScreen = ({ navigation }) => {
+  // set the variables
   const [isLoading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
   var [refresh, setRefresh] = useState(false);
-  const [buddies, setBuddies] = useState([]);
 
+  // sort reviews by rating
   function compareRating(a, b) {
     if (a.rating > b.rating) {
       return -1;
@@ -24,31 +27,41 @@ const RecommendationsScreen = ({ navigation }) => {
     }
     return 0;
   }
+
+  // get all reviews from all users in the database
   const getReviews = async () => {
     const reviews = [];
+    // collection group gets every collection with the name "reviews"
     const querySnapshot = await db.collectionGroup("reviews").get();
     querySnapshot.forEach((doc) => {
+      // for each document review get the data and set the key to doc.id and 
+      // reviewer name in case more than one user reviews a piece of content
       reviews.push({
         ...doc.data(),
         key: doc.id + doc.reviewerName,
       });
     });
+    // sort the reviews, set them, and finish the query
     reviews.sort(compareRating);
     setReviews(reviews);
     setLoading(false);
     refresh = false;
   };
 
+  // on the first opening of te page get the reviews
   useEffect(() => {
     if (isLoading) {
       getReviews();
     }
   }, []);
+
+  // when the flatlist is pulled down refresh the reviews
   const handleRefresh = () => {
     refresh = true;
     getReviews();
   };
 
+  // render the items in the flat list
   const renderItem = ({ item }) => {
     return (
       <View style={[styles.item]}>
@@ -58,9 +71,10 @@ const RecommendationsScreen = ({ navigation }) => {
             imageSize={20}
             type="custom"
             readonly
+            //halved because ratings are out of 10
             startingValue={item.rating / 2}
             ratingColor="#fff"
-            tintColor="#95D7AE"
+            tintColor={colours.bgColor}
             ratingBackgroundColor="#000"
           />
           <Text style={styles.extrainfo}>Year: {item.cYear}</Text>
@@ -76,6 +90,7 @@ const RecommendationsScreen = ({ navigation }) => {
     );
   };
 
+  // return the screen
   return (
     <View style={styles.container}>
       <Text>Popcorn Buddies RecommendationsScreen</Text>
@@ -94,26 +109,27 @@ const RecommendationsScreen = ({ navigation }) => {
           refreshing={refresh}
           onRefresh={handleRefresh}
           initialNumToRender={5}
-          maxToRenderPerBatch={10}
+          maxToRenderPerBatch={5}
           windowSize={5}
         />
       )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colours.primary,
+    backgroundColor: colours.bgColor,
     justifyContent: "center",
   },
   button: {
     width: 350,
     marginTop: 5,
-    backgroundColor: "#19323C",
+    backgroundColor: colours.theBlue,
   },
   item: {
-    backgroundColor: "#67eec5",
+    backgroundColor: colours.itemColor,
     padding: 20,
     marginVertical: 7,
     marginHorizontal: 12,
@@ -130,80 +146,3 @@ const styles = StyleSheet.create({
 });
 
 export default RecommendationsScreen;
-
-/*
-      const loadReviews = () => {
-        db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
-          snapshot.forEach(doc => {
-            //-----------------
-            const buddyName = db.collection('users').doc(doc.id).get();
-            if (!doc.exists) {
-              //console.log('No such document!');
-            } else {
-              //console.log('Document data:', doc.data());
-            }
-            //----------------
-            db.collection('users').doc(doc.id).collection('reviews').onSnapshot(snapshotRev => {
-              snapshotRev.forEach(docRev => {
-                console.log(docRev.data())
-                reviews.push({
-                  ...docRev.data(),
-                  key: docRev.id,
-                });  
-              });
-            });
-
-          });
-        });
-        setLoading(false);
-      }
-*/
-/*
-setReviews([])
-          console.log("WHYYYY")
-          loadReviews();
-          reviews.sort(compareRating);*/
-
-/* Safe but only shows own reviews like on profile
-      useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('reviews').onSnapshot(snapshot => {
-            const reviews = [];
-            snapshot.forEach(doc => {
-              reviews.push({
-                ...doc.data(),
-                key: doc.id,
-              });
-            });
-            reviews.sort(compareRating);
-            setReviews(reviews);
-            setLoading(false);
-          });
-        return () => subscriber();
-      }, []);
-
-      */
-
-/*
-      const getReviews = async (userId) => {
-        console.log(userId)
-        const querySnapshot = await db.collectionGroup('reviews').where('reviewerId','==', userId).get();
-        querySnapshot.forEach((doc) => {
-          console.log("AJSHFIJADIOUJGFOIUDBNFGIOSDAUJBNGF")
-          console.log(doc.id, ' =>      ', doc.data());
-          reviews.push({
-            ...doc.data(),
-            key: doc.id,
-          })
-        });
-      }
-      const getBuddies = async () => {
-        const querySnapshot = await db.collection('users').doc(auth.currentUser.uid).collection('buddies').get();
-        querySnapshot.forEach((doc) => {
-          console.log(doc.id, ' => ', doc.data());
-          getReviews(doc.id.toString())
-        });
-        setLoading(false)
-      }
-
-
-      */

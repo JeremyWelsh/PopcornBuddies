@@ -5,14 +5,17 @@ import { auth, db } from "../../firebase";
 import { ActivityIndicator } from "react-native";
 import colours from "../config/colours";
 import { Button } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 const AddBuddyScreen = ({ navigation }) => {
+
+  // setting up all of the variables
   const [isLoading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
   const [addedbuddies, setAddedBuddies] = useState([]);
 
+  // add buddy method takes the details of a buddy
   const addBuddy = async (buddyid, buddyName, email) => {
+    // tries to set the variables in the collection "buddies" of the signed in user
     try {
       await db
         .collection("users")
@@ -24,19 +27,24 @@ const AddBuddyScreen = ({ navigation }) => {
           email: email,
           key: buddyid
         });
+        // alerts the user the buddy has been added
       alert("Added " + buddyName + " as a Buddy");
+      // reloads the page
       setLoading(true)
     } catch (error) {
       console.error(error);
     }
   };
 
-
+  // get buddies gets all buddies from the database except for the current user,
+  // and the ones they have already added
   const getBuddies = async () => {
     const buddies = [];
     const querySnapshot = await db.collection("users").get();
+    // for each document in the snapshot
     querySnapshot.forEach((doc) => {
       if((doc.id != auth.currentUser.uid) && (addedbuddies.filter(e => e.key === doc.id.toString())).length <1){
+        //add the document data and id to the buddies array
         buddies.push({
           ...doc.data(),
           key: doc.id,
@@ -44,12 +52,18 @@ const AddBuddyScreen = ({ navigation }) => {
       }
     });
     setBuddies(buddies);
+    // show that the query has finished
     setLoading(false)
   };
+
+
+  // get the buddies that the current user already has added
   const getAddedBuddies = async () => {
     const addedbuddies = [];
     const querySnapshot = await db.collection("users").doc(auth.currentUser.uid).collection("buddies").get();
+    // for each document in the current users buddies collection
     querySnapshot.forEach((doc) => {
+      // add the data
       addedbuddies.push({
         ...doc.data(),
         key: doc.id,
@@ -58,21 +72,15 @@ const AddBuddyScreen = ({ navigation }) => {
     setAddedBuddies(addedbuddies);
   };
 
+
+  // whenever the screen is loading, get the buddies that they have not added yet
   useEffect(() => {
     getAddedBuddies();
     getBuddies()
   }, [isLoading]);
 
 
-
-
-
-
-
-
-
-  //<Text style={styles.email}>{item.email}</Text>
-  //style={{alignItems:"column"}}
+  // render the screen
   const renderItem = ({ item }) => {
     return (
       <View style={styles.item}>
@@ -92,7 +100,6 @@ const AddBuddyScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies AddBuddyScreen</Text>
       <StatusBar style="auto" />
       {isLoading ? (
         <ActivityIndicator
@@ -113,14 +120,15 @@ const AddBuddyScreen = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#066",
+    backgroundColor: colours.bgColor,
     justifyContent: "center",
   },
   item: {
-    backgroundColor: "#46f21e",
+    backgroundColor: colours.itemColor,
     alignItems: "flex-start",
     justifyContent: "space-between",
     flex: 1,

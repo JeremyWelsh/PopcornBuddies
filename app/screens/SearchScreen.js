@@ -1,48 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ActivityIndicator,
-  FlatList,
-  TouchableOpacity,
-  Keyboard,
-} from "react-native";
-import {
-  Button,
-  SearchBar,
-  Rating,
-  ThemeProvider,
-} from "react-native-elements";
+import { StyleSheet, Text, View, ActivityIndicator, FlatList, TouchableOpacity, Keyboard} from "react-native";
+import { Button, SearchBar, Rating, ThemeProvider} from "react-native-elements";
 import { Image } from "react-native-elements/dist/image/Image";
+import colours from "../config/colours";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-const Movie_Search_Link =
-  "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
-const TV_Search_Link =
-  "https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
-
+//all links for searches
+const Movie_Search_Link ="https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
+const TV_Search_Link ="https://api.themoviedb.org/3/search/tv?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=";
 const Image_Link = "https://image.tmdb.org/t/p/w200";
-const Genre_Movies_Link =
-  "https://api.themoviedb.org/3/genre/movie/list?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US";
-const Genre_TV_Link =
-  "https://api.themoviedb.org/3/genre/tv/list?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US";
-//https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
-//https://api.themoviedb.org/3/search/multi?api_key=2ba045feca37e46db2c792c05da251f5&language=en-US&query=Transformers
-// for multi search
-
-const themeSelected = {
-  colors: {
-    primary: "#e3337d",
-  },
-};
-const themeNot = {
-  colors: {
-    primary: "#000",
-  },
-};
+// themes for the buttons at the top
+const themeSelected = {colors: {primary: colours.orange}};
+const themeNot = {colors: {primary: colours.jetGrey}};
 
 // moved this outside of the search screen so it would not fully reaload on a re render
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -53,105 +24,101 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         imageSize={20}
         type="custom"
         readonly
-        startingValue={item.vote_average / 2}
+        //halved because ratings are out of 10
+        startingValue={item.rating / 2}
         ratingColor="#fff"
-        tintColor="#95D7AE"
+        tintColor={colours.bgColor}
         ratingBackgroundColor="#000"
       />
       <Text style={[styles.extrainfo, textColor]}>
-        Released:{" "}
-        {item.release_date || item.first_air_date
-          ? item.release_date || item.first_air_date
-          : "No date provided"}
+        Released:{" "}{(item.release_date || item.first_air_date) ? (item.release_date || item.first_air_date) : "No date provided"}
       </Text>
       <Text style={[styles.overview, textColor]}>
-        {item.overview
-          ? item.overview.substring(0, 120) + ".."
-          : "No overview provided"}
+        {item.overview ? item.overview.substring(0, 120) + ".." : "No overview provided"}
       </Text>
     </View>
-    <Image
-      source={
-        item.poster_path ? { uri: `${Image_Link + item.poster_path}` } : null
-      }
+    <Image source={ item.poster_path ? { uri: `${Image_Link + item.poster_path}` } : null }
       style={{ width: 125, height: 180 }}
     />
   </TouchableOpacity>
 );
-/*
-  item.id === selectedId ? "#7BAE7F" : "#95D7AE"
-  <Text style={[styles.extrainfo, textColor]}>Genres: {item.genre_ids?mgenres[item.genre_ids[0]]: "" || item.genre_ids?tvgenres[item.genre_ids[0]]: ""} </Text>
-  */
 
 const SearchScreen = ({ navigation }) => {
+  // setting all the variables
   const [selectedId, setSelectedId] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [content, setContent] = useState([]);
-  //const [mgenres, setMGenres] = useState([]);
-  //const [tvgenres, setTVGenres] = useState([]);
   const [search, setSearch] = useState("");
   const [stype, setSType] = useState("");
 
+  // gets the content using the search link for tv shows
   const getContentTv = async () => {
     try {
+      // set search type to show the useEffect which link content getter to use
       setSType("Tv");
+      // get the content from the search added to the movie api link
       var response = await fetch(TV_Search_Link + search);
+      // if the search is empty just show the trending tv shows from the past week
       if (search == "") {
-        response = await fetch(
-          "https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5"
-        );
+        response = await fetch("https://api.themoviedb.org/3/trending/tv/week?api_key=2ba045feca37e46db2c792c05da251f5" );
       }
       const json = await response.json();
+      // set the content array to the results taken from the json array
       setContent(json.results);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
-    }
-  };
-  const getContentMovie = async () => {
-    try {
-      setSType("Movie");
-      var response = await fetch(Movie_Search_Link + search);
-      if (search == "") {
-        response = await fetch(
-          "https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5"
-        );
-      }
-      const json = await response.json();
-      setContent(json.results);
-    } catch (error) {
-      console.error(error);
-    } finally {
+      // show that the query has finished
       setLoading(false);
     }
   };
 
+  // gets the content using the search link for movies
+  const getContentMovie = async () => {
+    try {
+      // set search type to show the useEffect which link content getter to use
+      setSType("Movie");
+      // get the content from the search added to the movie api link
+      var response = await fetch(Movie_Search_Link + search);
+      // if the search is empty just show the trending movies from the past week
+      if (search == "") {
+        response = await fetch("https://api.themoviedb.org/3/trending/movie/week?api_key=2ba045feca37e46db2c792c05da251f5");
+      }
+      const json = await response.json();
+      // set the content array to the results taken from the json array
+      setContent(json.results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // show that the query has finished
+      setLoading(false);
+    }
+  };
+
+  //use effect which will be called whenever the search bar is updated
   useEffect(() => {
+    // if the search type is a movie
     if (stype == "Movie") {
+      // use movie getter
       getContentMovie();
     } else {
+      // use tv getter
       getContentTv();
     }
   }, [search]);
 
+  // when the page is opened for the first time
   useEffect(() => {
+    // set search bar to null
     setSearch("");
+    //set loading to true so it loads content into the flat list
     setLoading(true);
   }, []);
-  // not working yet
-  /*useEffect(() => {
-      setSearch("");
-      setRating(0);
-      setContentID("");
-      setContentName("");
-      setComment("");
-    },[{navigation}]);
-    */
 
+ // render the flatlist movies/tvshows
   const renderItem = ({ item }) => {
     //removed for better performance
-    const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ "#95D7AE";
+    const backgroundColor = /*item.id === selectedId ? "#7BAE7F" :*/ colours.itemColor;
     const color = /*item.id === selectedId ? 'white' :*/ "black";
     return (
       <Item
@@ -163,6 +130,7 @@ const SearchScreen = ({ navigation }) => {
     );
   };
 
+  //return the screen
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -217,9 +185,8 @@ const SearchScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#EEE0CB",
+    backgroundColor: colours.bgColor,
     flex: 1,
-    //marginTop: StatusBar.currentHeight || 0,
     justifyContent: "flex-start",
   },
   item: {
@@ -237,14 +204,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   button: {
-    //marginTop: 5,
     flex: 1,
   },
   searchBox: {
-    //padding: 5,
-    //alignItems: 'center',
     justifyContent: "center",
-    //backgroundColor: '#029420'
   },
   overview: {
     fontSize: 14,
@@ -252,48 +215,3 @@ const styles = StyleSheet.create({
 });
 
 export default SearchScreen;
-
-/*
-const getGenres = async () => {
-  try {
-    var response = await fetch(Genre_Link);
-    //console.log(Content_Search_Link+search); //for testing
-    const json = await response.json();
-    setGenres(json.genres);
-  } catch (error) {
-   console.error(error);
-  } finally {
-   setLoading(false);
-  }
-  
-  // tried forever to try get this to work the same as the movie method but it never did so i followed the advice from this 
-  // stack overflow on how to turn the json array into this sort of array
-  //https://stackoverflow.com/questions/61615574/translate-gendre-ids-from-tmdb-api-in-react-native-application
-  // fetch for movie genres
-  fetch(Genre_Movies_Link)
-    .then(genre => genre.json())
-    .then(result => {
-        const genres = result.genres.reduce((genres,gObj) => {
-            const { id, name } = gObj
-            genres[id] = name
-            return genres
-        },[])
-        console.log(genres);
-        setMGenres(genres)
-    })
-    
-    //fetch for tv genres
-    fetch(Genre_TV_Link)
-    .then(genre => genre.json())
-    .then(result => {
-        const tvgenres = result.genres.reduce((tvgenres,gObj) => {
-            const { id, name } = gObj
-            tvgenres[id] = name
-            return tvgenres
-        },[])
-        console.log(tvgenres);
-        setTVGenres(tvgenres)
-    })
-    
-  }
-  */

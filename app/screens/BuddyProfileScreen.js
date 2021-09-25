@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { auth, db } from "../../firebase";
+import { db } from "../../firebase";
 import { ActivityIndicator } from "react-native";
 import { Image } from "react-native-elements/dist/image/Image";
 import colours from "../config/colours";
-import { Button } from "react-native-elements/dist/buttons/Button";
 import { Rating } from "react-native-elements";
 
+// link to use the image path
 const Image_Link = "https://image.tmdb.org/t/p/w200";
-// where a user views a specific buddy
+
+// route used to path through the user item from buddyscreen
 const BuddyProfileScreen = ({route }) => {
+  //get route params for the buddy
   const uid = route.params?.key;
   const uname = route.params?.name;
+  //set variables
   const [isLoading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
 
+  // sort(compareRating) to order the content highest rating to lowest
   function compareRating(a, b) {
     if (a.rating > b.rating) {
       return -1;
@@ -26,7 +30,9 @@ const BuddyProfileScreen = ({route }) => {
     return 0;
   }
 
+  // use effect on opening the screen
   useEffect(() => {
+    // get the snapshot of the buddy's reviews from the firestore database
     const subscriber = db
       .collection("users")
       .doc(uid)
@@ -39,25 +45,16 @@ const BuddyProfileScreen = ({route }) => {
             key: doc.id,
           });
         });
+        // sort the reviews by ratings then set the reviews
         reviews.sort(compareRating);
         setReviews(reviews);
+        // query has been finished
         setLoading(false);
       });
     return () => subscriber();
   }, []);
 
-  /*
-    .add({
-          cID: contentId,
-          cName: contentName,
-          cYear: year,
-          type: type,
-          rating: starRating,
-          comment: comment,
-          poster: ppath
-        })
-        */
-
+  //render the movies/tvshows from the flat list
   const renderItem = ({ item }) => {
     return (
       <View style={[styles.item]}>
@@ -67,9 +64,10 @@ const BuddyProfileScreen = ({route }) => {
             imageSize={20}
             type="custom"
             readonly
+            // rating is out of ten and there are 5 stars so the rating is halved
             startingValue={item.rating / 2}
             ratingColor="#fff"
-            tintColor="#95D7AE"
+            tintColor={colours.itemColor}
             ratingBackgroundColor="#000"
           />
           <Text style={styles.extrainfo}>Year: {item.cYear}</Text>
@@ -84,6 +82,7 @@ const BuddyProfileScreen = ({route }) => {
     );
   };
 
+  // return the screen
   return (
     <View style={styles.container}>
       <Text>Popcorn Buddies BuddyProfileScreen</Text>
@@ -105,16 +104,16 @@ const BuddyProfileScreen = ({route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#353",
+    backgroundColor: colours.bgColor,
     justifyContent: "center",
   },
   button: {
     width: 350,
     marginTop: 5,
-    backgroundColor: "#19323C",
+    backgroundColor: colours.theBlue,
   },
   item: {
-    backgroundColor: "#19323C",
+    backgroundColor: colours.itemColor,
     padding: 20,
     marginVertical: 7,
     marginHorizontal: 12,

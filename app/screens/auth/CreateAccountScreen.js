@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Input } from "react-native-elements";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { auth, db } from "../../../firebase.js";
+import colours from "../../config/colours";
 
 //followed the start of this tutorial to help code the login and create account screens
 //https://www.youtube.com/watch?v=MJzmZ9qmdaE
@@ -17,8 +18,7 @@ const CreateAccountScreen = ({ navigation }) => {
   // sign up method called when the user presses the create account button
   const CreateAccount = () => {
     // requires an email and password to log in
-    auth
-      .createUserWithEmailAndPassword(email, password)
+    auth.createUserWithEmailAndPassword(email, password)
       .then((authUser) => {
         // if the requirements are met then update the email with the buddyName
         authUser.user.updateProfile({
@@ -31,6 +31,7 @@ const CreateAccountScreen = ({ navigation }) => {
       //if the requirements were not met then alert the user on the screen with the error
       .catch((error) => alert(error.message));
   };
+  
   // return the screen
   return (
     <View style={styles.container}>
@@ -66,6 +67,7 @@ const CreateAccountScreen = ({ navigation }) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   inputView: {
     width: 350,
@@ -73,11 +75,11 @@ const styles = StyleSheet.create({
   button: {
     width: 350,
     marginTop: 5,
-    backgroundColor: "#19323C",
+    backgroundColor: colours.theBlue,
   },
   container: {
     flex: 1,
-    backgroundColor: "#F2D0A4",
+    backgroundColor: colours.bgColor,
     alignItems: "center",
     justifyContent: "center",
     padding: 15,

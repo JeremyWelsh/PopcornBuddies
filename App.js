@@ -19,6 +19,7 @@ const Tab = createBottomTabNavigator();
 
 //const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
 
+// header colours and font
 const headerOptions = {
   headerStyle: {
     backgroundColor: "#17BEBB",
@@ -29,6 +30,7 @@ const headerOptions = {
   },
 };
 
+// all of the screens that are tied to the buddy screen in the tab navigator
 function BuddyScreens() {
   return (
     <Buddy.Navigator initialRouteName={"Buddy"}>
@@ -38,6 +40,7 @@ function BuddyScreens() {
     </Buddy.Navigator>
   );
 }
+// all the tabs to be shown in the tab navigator
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -65,6 +68,7 @@ function MyTabs() {
   );
 }
 
+// all the screens in the navigation
 export default function App() {
   return (
     <NavigationContainer>
