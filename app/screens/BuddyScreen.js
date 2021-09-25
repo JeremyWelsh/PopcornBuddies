@@ -52,6 +52,9 @@ const BuddyScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
+      <View style={styles.topView}>
+          <Text style={styles.topText}>Your Buddies</Text>
+      </View>
       {isLoading ? (
         <ActivityIndicator
           ActivityIndicator
@@ -104,7 +107,19 @@ const styles = StyleSheet.create({
   },
   FlatList:{
     flex: 1,
-  }
+  },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "row",
+    paddingHorizontal:15,
+    paddingVertical:10,
+    backgroundColor: colours.theBlue,
+  },
+  topText: {
+    fontWeight: "normal",
+    fontSize: 25,
+    color:'#fff',
+  },
 });
 
 export default BuddyScreen;

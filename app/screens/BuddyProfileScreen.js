@@ -135,7 +135,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     paddingHorizontal:15,
-    paddingVertical:7,
+    paddingTop:7,
+    paddingBottom:9,
+    backgroundColor:colours.stars,
   },
   userInfo: {
     flex:1,
