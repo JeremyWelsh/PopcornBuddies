@@ -12,7 +12,7 @@ import BuddyProfileScreen from "./app/screens/BuddyProfileScreen";
 import SearchScreen from "./app/screens/SearchScreen";
 import LoginScreen from "./app/screens/auth/LoginScreen";
 import CreateAccountScreen from "./app/screens/auth/CreateAccountScreen";
-
+import colours from "./app/config/colours";
 const Buddy = createStackNavigator();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -22,9 +22,9 @@ const Tab = createBottomTabNavigator();
 // header colours and font
 const headerOptions = {
   headerStyle: {
-    backgroundColor: "#17BEBB",
+    backgroundColor: colours.theBlue ,
   },
-  headerTintColor: "#fff",
+  headerTintColor: '#fff',
   headerTitleStyle: {
     fontWeight: "bold",
   },
@@ -50,9 +50,17 @@ function MyTabs() {
         tabBarStyle: [
           {
             display: "flex",
+            backgroundColor: colours.theBlue ,
           },
           null,
         ],
+        headerStyle: {
+          backgroundColor: colours.theBlue ,
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: "bold",
+        },
       }}
     >
       <Tab.Screen name="Recommendations" component={RecommendationsScreen} />
