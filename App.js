@@ -2,6 +2,8 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Text, View } from "react-native";
+import { Image } from "react-native-elements/dist/image/Image";
 import "react-native-gesture-handler";
 import RecommendationsScreen from "./app/screens/RecommendationsScreen";
 import ProfileScreen from "./app/screens/ProfileScreen";
@@ -18,6 +20,9 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 //const MOVIE_SEARCH_API = "https://api.themoviedb.org/3/search/movie?api_key=2ba045feca37e46db2c792c05da251f5&query=";
+
+// source i used to help with the tab navigator icons
+// https://www.youtube.com/watch?v=gPaBicMaib4
 
 // header colours and font
 const headerOptions = {
@@ -45,7 +50,9 @@ function MyTabs() {
   return (
     <Tab.Navigator
       initialRouteName={"PopcornBuddies"}
-      screenOptions={{
+      screenOptions={({ route }) => ({
+        
+        tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
         tabBarStyle: [
           {
@@ -62,17 +69,63 @@ function MyTabs() {
         headerTitleStyle: {
           fontWeight: "bold",
         },
-      }}
+      })}
     >
-      <Tab.Screen name="Popcorn Buddies" component={RecommendationsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
-      <Tab.Screen name="Add" component={AddReviewScreen} />
+      <Tab.Screen name="Popcorn Buddies" component={RecommendationsScreen} options={{
+        tabBarIcon: ({focused}) =>(
+          <View style={{alignItems:'center', justifyContent:'center'}}>
+            <Image source={require('./app/assets/icons/outline_view_headline_black_24dp.png')}
+                  resizeMode='contain'
+                  style={{width:25, height:25, tintColor: focused? colours.orange: colours.theBlue}}/>
+            <Text style={{fontSize:12, color: focused? colours.orange: colours.theBlue}} >Feed</Text>
+          </View>
+        )
+      }}/>
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{
+        tabBarIcon: ({focused}) =>(
+          <View style={{alignItems:'center', justifyContent:'center'}}>
+            <Image source={require('./app/assets/icons/outline_account_circle_black_24dp.png')}
+                  resizeMode='contain'
+                  style={{width:25, height:25, tintColor: focused? colours.orange: colours.theBlue}}/>
+            <Text style={{fontSize:12, color: focused? colours.orange: colours.theBlue}} >Profile</Text>
+          </View>
+        )
+      }}/>
+      <Tab.Screen name="Add" component={AddReviewScreen} options={{
+        tabBarIcon: ({focused}) =>(
+          <View style={{alignItems:'center', justifyContent:'center'}}>
+            <Image source={require('./app/assets/icons/outline_rate_review_black_24dp.png')}
+                  resizeMode='contain'
+                  style={{width:25, height:25, tintColor: focused? colours.orange: colours.theBlue}}/>
+            <Text style={{fontSize:12, color: focused? colours.orange: colours.theBlue}} >Review</Text>
+          </View>
+        )
+      }}/>
       <Tab.Screen
         name="Buddy"
         component={BuddyScreens}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({focused}) =>(
+            <View style={{alignItems:'center', justifyContent:'center'}}>
+              <Image source={require('./app/assets/icons/outline_group_add_black_24dp.png')}
+                    resizeMode='contain'
+                    style={{width:25, height:25, tintColor: focused? colours.orange: colours.theBlue}}/>
+              <Text style={{fontSize:12, color: focused? colours.orange: colours.theBlue}} >Buddies</Text>
+            </View>
+          )
+        }}
       />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} options={{
+        tabBarIcon: ({focused}) =>(
+          <View style={{alignItems:'center', justifyContent:'center'}}>
+            <Image source={require('./app/assets/icons/outline_live_tv_black_24dp.png')}
+                  resizeMode='contain'
+                  style={{width:25, height:25, tintColor: focused? colours.orange: colours.theBlue}}/>
+            <Text style={{fontSize:12, color: focused? colours.orange: colours.theBlue}} >Search</Text>
+          </View>
+        )
+      }}/>
     </Tab.Navigator>
   );
 }
