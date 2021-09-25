@@ -135,15 +135,6 @@ const AddReviewScreen = ({ navigation }) => {
     setSearch("");
     setLoading(true);
   }, []);
-  // not working yet
-  /*useEffect(() => {
-      setSearch("");
-      setRating(0);
-      setContentID("");
-      setContentName("");
-      setComment("");
-    },[{navigation}]);
-    */
 
   const renderItem = ({ item }) => {
     //removed for better performance
@@ -169,8 +160,8 @@ const AddReviewScreen = ({ navigation }) => {
     );
   };
   const refresh = () => {
-    setSearch("");
     setRating(0);
+    setSearch("");
     setContentID("");
     setContentName("");
     setComment("");
@@ -233,7 +224,7 @@ const AddReviewScreen = ({ navigation }) => {
             Selected Content: {contentName} {contentId} {type} {starRating}
           </Text>
           <Rating
-            startingValue={0}
+            startingValue={starRating/2}
             fractions={1}
             ratingCount={5}
             imageSize={40}
