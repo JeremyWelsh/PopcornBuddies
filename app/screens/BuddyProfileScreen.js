@@ -66,7 +66,7 @@ const BuddyProfileScreen = ({route }) => {
             readonly
             // rating is out of ten and there are 5 stars so the rating is halved
             startingValue={item.rating / 2}
-            ratingColor="#fff"
+            ratingColor={colours.stars}
             tintColor={colours.itemColor}
             ratingBackgroundColor="#000"
           />

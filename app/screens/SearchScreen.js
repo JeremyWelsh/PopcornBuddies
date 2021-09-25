@@ -12,8 +12,8 @@ const TV_Search_Link ="https://api.themoviedb.org/3/search/tv?api_key=2ba045feca
 const Image_Link = "https://image.tmdb.org/t/p/w200";
 
 // themes for the buttons at the top
-const themeSelected = {colors: {primary: colours.orange}};
-const themeNot = {colors: {primary: colours.jetGrey}};
+const themeSelected = {colors: {primary: colours.stars, secondary: '#000'}};
+const themeNot = {colors: {primary: colours.jetGrey, secondary: '#fff'}};
 
 // moved this outside of the search screen so it would not fully reaload on a re render
 const Item = ({ item, onPress, backgroundColor, textColor }) => (
@@ -26,7 +26,7 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         readonly
         //halved because ratings are out of 10
         startingValue={item.vote_average / 2}
-        ratingColor="#fff"
+        ratingColor={colours.stars}
         tintColor={colours.itemColor}
         ratingBackgroundColor="#000"
       />

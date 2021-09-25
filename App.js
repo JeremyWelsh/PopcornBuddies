@@ -22,7 +22,7 @@ const Tab = createBottomTabNavigator();
 // header colours and font
 const headerOptions = {
   headerStyle: {
-    backgroundColor: colours.theBlue ,
+    backgroundColor: colours.jetGrey,
   },
   headerTintColor: '#fff',
   headerTitleStyle: {
@@ -33,7 +33,7 @@ const headerOptions = {
 // all of the screens that are tied to the buddy screen in the tab navigator
 function BuddyScreens() {
   return (
-    <Buddy.Navigator initialRouteName={"Buddy"}>
+    <Buddy.Navigator initialRouteName={"Buddy"} screenOptions={headerOptions}>
       <Buddy.Screen name="Buddy" component={BuddyScreen} />
       <Buddy.Screen name="AddBuddy" component={AddBuddyScreen} />
       <Buddy.Screen name="BuddyProfile" component={BuddyProfileScreen} />
@@ -50,12 +50,13 @@ function MyTabs() {
         tabBarStyle: [
           {
             display: "flex",
-            backgroundColor: colours.theBlue ,
+            backgroundColor: colours.jetGrey ,
+
           },
           null,
         ],
         headerStyle: {
-          backgroundColor: colours.theBlue ,
+          backgroundColor: colours.jetGrey,
         },
         headerTintColor: '#fff',
         headerTitleStyle: {

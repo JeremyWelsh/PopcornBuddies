@@ -73,7 +73,7 @@ const RecommendationsScreen = ({ navigation }) => {
             readonly
             //halved because ratings are out of 10
             startingValue={item.rating / 2}
-            ratingColor="#fff"
+            ratingColor={colours.stars}
             tintColor={colours.itemColor}
             ratingBackgroundColor="#000"
           />

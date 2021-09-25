@@ -24,8 +24,8 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
 );
 
 // themes for the buttons at the top
-const themeSelected = {colors: {primary: colours.orange}};
-const themeNot = {colors: {primary: colours.jetGrey}};
+const themeSelected = {colors: {primary: colours.stars, secondary: '#000'}};
+const themeNot = {colors: {primary: colours.jetGrey, secondary: '#fff'}};
 
 const AddReviewScreen = ({ navigation }) => {
   // setters for all the variables
@@ -227,6 +227,7 @@ const AddReviewScreen = ({ navigation }) => {
             <Text style={styles.forum}>Your Rating :</Text>
             <Rating
               startingValue={starRating/2}
+              type="custom"
               fractions={2}
               ratingCount={5}
               imageSize={40}
@@ -234,7 +235,7 @@ const AddReviewScreen = ({ navigation }) => {
               jumpValue={0.25}
               // rating is out of ten and there are 5 stars so the rating is doubled
               onFinishRating={(rating) => setRating(rating * 2)}
-              ratingColor="#fff"
+              ratingColor={colours.stars}
               tintColor={colours.bgColor}
               ratingBackgroundColor="#000"
             />
