@@ -25,23 +25,25 @@ const Item = ({ item, onPress, backgroundColor, textColor }) => (
         type="custom"
         readonly
         //halved because ratings are out of 10
-        startingValue={item.voteRating / 2}
+        startingValue={item.vote_average / 2}
         ratingColor="#fff"
-        tintColor={colours.bgColor}
+        tintColor={colours.itemColor}
         ratingBackgroundColor="#000"
       />
       <Text style={[styles.extrainfo, textColor]}>
-        Released:{" "}{(item.release_date || item.first_air_date) ? (item.release_date || item.first_air_date) : "No date provided"}
+        Released:{" "}  {item.release_date || item.first_air_date ? item.release_date || item.first_air_date : "No date provided"}
       </Text>
       <Text style={[styles.overview, textColor]}>
         {item.overview ? item.overview.substring(0, 120) + ".." : "No overview provided"}
       </Text>
     </View>
-    <Image source={ item.poster_path ? { uri: `${Image_Link + item.poster_path}` } : null }
+    <Image
+      source={ item.poster_path ? { uri: `${Image_Link + item.poster_path}` } : null}
       style={{ width: 125, height: 180 }}
     />
   </TouchableOpacity>
 );
+
 
 const SearchScreen = ({ navigation }) => {
   // setting all the variables
