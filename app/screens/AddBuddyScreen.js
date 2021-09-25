@@ -10,8 +10,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 const AddBuddyScreen = ({ navigation }) => {
   const [isLoading, setLoading] = useState(true);
   const [buddies, setBuddies] = useState([]);
+  const [allbuddies, setAllBuddies] = useState([]);
+  const [addedbuddies, setAddedBuddies] = useState([]);
 
-  const addBuddy = async (buddyid, name) => {
+  const addBuddy = async (buddyid, buddyName, email) => {
     try {
       await db
         .collection("users")
@@ -19,30 +21,88 @@ const AddBuddyScreen = ({ navigation }) => {
         .collection("buddies")
         .doc(buddyid)
         .set({
-          bId: buddyid,
-          bName: name,
+          buddyName: buddyName,
+          email: email,
+          key: buddyid
         });
-      alert("Added " + name + " as a Buddy");
+      alert("Added " + buddyName + " as a Buddy");
     } catch (error) {
       console.error(error);
     }
   };
 
-  useEffect(() => {
-    const subscriber = db.collection("users").onSnapshot((snapshot) => {
-      const buddies = [];
-      snapshot.forEach((doc) => {
+
+  const getBuddies = async () => {
+    const buddies = [];
+    const querySnapshot = await db.collection("users").get();
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data().key + "jfhasoijngfoiungosd        gjsdgo jnbsdogn buiosdnbgoi u    sguih du gsioudb giousdh")
+      console.log("----------------------------")
+      console.log(addedbuddies.includes(doc.data().key))
+
+      if((doc.id != auth.currentUser.uid) && !(addedbuddies.includes(doc.data().key))){
         buddies.push({
           ...doc.data(),
           key: doc.id,
         });
-      });
-
-      setBuddies(buddies);
-      setLoading(false);
+      }
     });
-    return () => subscriber();
+    console.log("----------Not added------------------")
+    console.log(buddies)
+    console.log("----------------------------")
+    setBuddies(buddies);
+    setLoading(false);
+  };
+  const getAddedBuddies = async () => {
+    const addedbuddies = [];
+    const querySnapshot = await db.collection("users").doc(auth.currentUser.uid).collection("buddies").get();
+    querySnapshot.forEach((doc) => {
+      
+      console.log(doc.id + "jfhasoijngfoiungosd        gjsdgo jnbsdogn buiosdnbgoi u    sguih du gsioudb giousdh")
+      console.log("----------------------------")
+      console.log(doc.id + "                  gfsadgsfdgfsd")
+      addedbuddies.push({
+        ...doc.data(),
+        key: doc.id,
+      });
+    });
+    console.log("------------already adddeeeddd----------------")
+    console.log(addedbuddies)
+    console.log("----------------------------")
+    setAddedBuddies(addedbuddies);
+    setLoading(false);
+  };
+/*
+  const getBuddies = async () => {
+    const buddies = allbuddies.filter(item => (!addedbuddies.includes(item.id)));
+    console.log("---------buddies-------------------")
+    console.log(buddies)
+    console.log("----------------------------")
+    setBuddies(buddies);
+    setLoading(false);
+  };
+*/
+  useEffect(() => {
+    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
+    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
+    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
+    console.log("-----------NEWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW-----------------")
+    //getAllBuddies();
+    getAddedBuddies();
+    
+    getBuddies();
+    console.log("---------Final collection of not added-----------------")
+    console.log(buddies)
+    console.log("----------------------------")
   }, []);
+
+
+
+
+
+
+
+
 
   //<Text style={styles.email}>{item.email}</Text>
   //style={{alignItems:"column"}}
@@ -57,7 +117,7 @@ const AddBuddyScreen = ({ navigation }) => {
           containerStyle={styles.button}
           title="Add Buddy"
           onPress={() => {
-            addBuddy(item.key, item.buddyName);
+            addBuddy(item.key, item.buddyName, item.email);
           }}
         />
       </View>
