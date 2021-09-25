@@ -36,20 +36,13 @@ const AddBuddyScreen = ({ navigation }) => {
     const buddies = [];
     const querySnapshot = await db.collection("users").get();
     querySnapshot.forEach((doc) => {
-      console.log(doc.data().key + "jfhasoijngfoiungosd        gjsdgo jnbsdogn buiosdnbgoi u    sguih du gsioudb giousdh")
-      console.log("----------------------------")
-      console.log(addedbuddies.includes(doc.data().key))
-
-      if((doc.id != auth.currentUser.uid) && !(addedbuddies.includes(doc.data().key))){
+      if((doc.id != auth.currentUser.uid) && (addedbuddies.filter(e => e.key === doc.id.toString())).length <1){
         buddies.push({
           ...doc.data(),
           key: doc.id,
         });
       }
     });
-    console.log("----------Not added------------------")
-    console.log(buddies)
-    console.log("----------------------------")
     setBuddies(buddies);
     setLoading(false);
   };
