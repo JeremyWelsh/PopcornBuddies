@@ -15,11 +15,12 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   // if the user is signed in then take them to the tab screens
   useEffect(() => {
-    auth.onAuthStateChanged((authenticated) => {
+    const unsubscribe = auth.onAuthStateChanged((authenticated) => {
       if (authenticated) {
         navigation.replace("MainTabNavigator");
       }
     });
+    return unsubscribe;
   }, []);
   // login method called when the signin button is pressed
   const LogIn = () => {
