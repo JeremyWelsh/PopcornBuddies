@@ -5,6 +5,7 @@ import { auth, db } from "../../firebase";
 import { ActivityIndicator } from "react-native";
 import colours from "../config/colours";
 import { Button } from "react-native-elements";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 // screen where a user sees all of their buddies
 const BuddyScreen = ({ navigation }) => {
@@ -47,17 +48,18 @@ const BuddyScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => {
     return (
-      <View
+      <TouchableOpacity
         style={{
           height: 50,
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
         }}
+        onPress={()=> {navigation.navigate('BuddyProfile',{key: item.key, name: item.buddyName})}}
       >
         <Text>Buddy Name: {item.buddyName}</Text>
         <Text>Buddy Email: {item.email}</Text>
-      </View>
+      </TouchableOpacity>
     );
   };
   return (

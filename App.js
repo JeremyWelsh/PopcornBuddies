@@ -8,6 +8,7 @@ import ProfileScreen from "./app/screens/ProfileScreen";
 import AddReviewScreen from "./app/screens/AddReviewScreen";
 import BuddyScreen from "./app/screens/BuddyScreen";
 import AddBuddyScreen from "./app/screens/AddBuddyScreen";
+import BuddyProfileScreen from "./app/screens/BuddyProfileScreen";
 import SearchScreen from "./app/screens/SearchScreen";
 import LoginScreen from "./app/screens/auth/LoginScreen";
 import CreateAccountScreen from "./app/screens/auth/CreateAccountScreen";
@@ -33,6 +34,7 @@ function BuddyScreens() {
     <Buddy.Navigator initialRouteName={"Buddy"}>
       <Buddy.Screen name="Buddy" component={BuddyScreen} />
       <Buddy.Screen name="AddBuddy" component={AddBuddyScreen} />
+      <Buddy.Screen name="BuddyProfile" component={BuddyProfileScreen} />
     </Buddy.Navigator>
   );
 }
