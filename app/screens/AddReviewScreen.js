@@ -221,10 +221,9 @@ const AddReviewScreen = ({ navigation }) => {
             />
           )}
         </View>
-        <View>
-          <Text style={styles.forum}> Selected Content: {contentName} </Text>
-          <View>
-            <Text style={styles.forum}>Your Rating :</Text>
+        <View style={styles.forumBox}>
+          <Text style={styles.forum}>Selected Content: {contentName} </Text>
+            <Text style={styles.forum}>Your Rating:</Text>
             <Rating
               startingValue={starRating/2}
               type="custom"
@@ -238,8 +237,8 @@ const AddReviewScreen = ({ navigation }) => {
               ratingColor={colours.stars}
               tintColor={colours.bgColor}
               ratingBackgroundColor="#000"
+              style={{marginBottom:8}}
             />
-          </View>
           <Input
             placeholder="Comment"
             autoFocus
@@ -252,6 +251,7 @@ const AddReviewScreen = ({ navigation }) => {
             onPress={() => {
               addReview(), refresh();
             }}
+            containerStyle={styles.subButton}
           />
         </View>
       </TouchableWithoutFeedback>
@@ -289,7 +289,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   forum: {
+    marginHorizontal:7,
     fontSize: 20,
+    marginBottom: 6,
+  },
+  forumBox: {
+    marginTop: 8,
+  },
+  subButton:{
+    marginHorizontal:30,
   }
 });
 
