@@ -131,6 +131,7 @@ const AddReviewScreen = ({ navigation }) => {
       getContentTv();
     }
   }, [search]);
+
   useEffect(() => {
     setSearch("");
     setLoading(true);
@@ -214,7 +215,7 @@ const AddReviewScreen = ({ navigation }) => {
               renderItem={renderItem}
               keyExtractor={(item) => item.id.toString()}
               initialNumToRender={5}
-              maxToRenderPerBatch={10}
+              maxToRenderPerBatch={5}
               windowSize={5}
             />
           )}

@@ -204,8 +204,8 @@ const SearchScreen = ({ navigation }) => {
             data={content}
             renderItem={renderItem}
             keyExtractor={(item) => `${item.id}`}
-            initialNumToRender={5}
-            maxToRenderPerBatch={10}
+            initialNumToRender={3}
+            maxToRenderPerBatch={3}
             windowSize={5}
             contentContainerStyle={{ paddingBottom: 250 }}
           />
