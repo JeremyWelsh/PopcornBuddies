@@ -26,7 +26,7 @@ const BuddyScreen = ({navigation}) => {
     }
 */
     useEffect(() => {
-      const buddySub = db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
             const buddies = [];
             snapshot.forEach(doc => {
               buddies.push({
@@ -44,8 +44,8 @@ const BuddyScreen = ({navigation}) => {
       const renderItem = ({ item }) => {
           return(
             <View style={{ height: 50, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text>User ID: {item.id}</Text>
-            <Text>User Name: {item.buddyName}</Text>
+            <Text>User ID: {item.bId}</Text>
+            <Text>User Name: {item.bName}</Text>
             </View>
           );
       };

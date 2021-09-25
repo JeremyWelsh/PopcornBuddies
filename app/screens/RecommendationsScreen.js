@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, RefreshControlBase, StyleSheet, Text, View } from "react-native";
 import {auth, db} from '../../firebase'
 import { ActivityIndicator } from 'react-native';
 import { Image } from 'react-native-elements/dist/image/Image';
@@ -13,33 +13,100 @@ const Image_Link = "https://image.tmdb.org/t/p/w200";
 const RecommendationsScreen = ({navigation}) => {
     const [isLoading, setLoading] = useState(true); 
     const [reviews, setReviews] = useState([]); 
+    const [refresh, setRefresh] = useState(""); 
+    const [buddies, setBuddies] = useState([]); 
 
     function compareRating( a, b ) {
         if ( a.rating > b.rating ){return -1;}
         if ( a.rating < b.rating ){return 1;}
         return 0;
       }
+    
+
+
+      /*
+      const loadReviews = () => {
+        db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
+          snapshot.forEach(doc => {
+            //-----------------
+            const buddyName = db.collection('users').doc(doc.id).get();
+            if (!doc.exists) {
+              //console.log('No such document!');
+            } else {
+              //console.log('Document data:', doc.data());
+            }
+            //----------------
+            db.collection('users').doc(doc.id).collection('reviews').onSnapshot(snapshotRev => {
+              snapshotRev.forEach(docRev => {
+                console.log(docRev.data())
+                reviews.push({
+                  ...docRev.data(),
+                  key: docRev.id,
+                });  
+              });
+            });
+
+          });
+        });
+        setLoading(false);
+      }
+*/
+/*
+setReviews([])
+          console.log("WHYYYY")
+          loadReviews();
+          reviews.sort(compareRating);*/
+
+          
+
+      const getReviews = async (userId) => {
+        const querySnapshot = await db.collection('users').doc(userId).collectioncollectionGroup('reviews').get();
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, ' => ', doc.data());
+          reviews.push({
+            ...doc.data(),
+            key: doc.id,
+          })
+        });
+      }
+      const getBuddies = async () => {
+        const querySnapshot = await db.collection('users').doc(auth.currentUser.uid).collection('buddies').get();
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, ' => ', doc.data());
+          getReviews(doc.id)
+        });
+        setLoading(false)
+      }
       useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
+        if(isLoading){  
+          getReviews();
+        }
+      }, []);
+
+
+
+
+
+      /* Safe but only shows own reviews like on profile
+      useEffect(() => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('reviews').onSnapshot(snapshot => {
             const reviews = [];
             snapshot.forEach(doc => {
-                console.log(doc.id + "USER");
-                const reviewSub = db.collection('users').doc(doc.id).collection('reviews').onSnapshot(snapshotRev => {
-                    snapshotRev.forEach(docRev => {
-                        reviews.push({
-                            ...docRev.data(),
-                            key: docRev.id,
-                        });
-                        console.log(reviews)
-                    });
-                });
-            }); 
-            return () => reviewSub();
+              reviews.push({
+                ...doc.data(),
+                key: doc.id,
+              });
+            });
+            reviews.sort(compareRating);
             setReviews(reviews);
             setLoading(false);
-        });
+          });
         return () => subscriber();
       }, []);
+
+      */
+
+      
 
 
       const renderItem = ({ item }) => {
@@ -73,6 +140,7 @@ const RecommendationsScreen = ({navigation}) => {
             renderItem={renderItem}
         />
             )}
+            <Button containerStyle={styles.button} title="refresh" onPress={()=>{setRefresh(" ")}} />
         </View>
 
     );
