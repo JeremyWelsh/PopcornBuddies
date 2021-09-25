@@ -57,7 +57,7 @@ const AddReviewScreen = ({navigation}) => {
           rating: starRating,
           comment: comment,
           poster: ppath,
-          //reviewerName: auth.currentUser.displayName
+          reviewerId: auth.currentUser.toString()
         })
         alert("AYEEEEE");
       }else{

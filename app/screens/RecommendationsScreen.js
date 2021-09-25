@@ -57,12 +57,25 @@ setReviews([])
           loadReviews();
           reviews.sort(compareRating);*/
 
-          
-
+          const getReviews = async () => {
+            //console.log(userId)
+            const querySnapshot = await db.collectionGroup('reviews').get();
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, ' =>  ', doc.data());
+              reviews.push({
+                ...doc.data(),
+                key: doc.id,
+              })
+            });
+            setLoading(false)
+          }
+/*
       const getReviews = async (userId) => {
-        const querySnapshot = await db.collection('users').doc(userId).collectioncollectionGroup('reviews').get();
+        console.log(userId)
+        const querySnapshot = await db.collectionGroup('reviews').where('reviewerId','==', userId).get();
         querySnapshot.forEach((doc) => {
-          console.log(doc.id, ' => ', doc.data());
+          console.log("AJSHFIJADIOUJGFOIUDBNFGIOSDAUJBNGF")
+          console.log(doc.id, ' =>      ', doc.data());
           reviews.push({
             ...doc.data(),
             key: doc.id,
@@ -73,10 +86,13 @@ setReviews([])
         const querySnapshot = await db.collection('users').doc(auth.currentUser.uid).collection('buddies').get();
         querySnapshot.forEach((doc) => {
           console.log(doc.id, ' => ', doc.data());
-          getReviews(doc.id)
+          getReviews(doc.id.toString())
         });
         setLoading(false)
       }
+
+
+      */
       useEffect(() => {
         if(isLoading){  
           getReviews();
