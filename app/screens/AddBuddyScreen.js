@@ -17,7 +17,8 @@ const AddBuddyScreen = ({navigation}) => {
         await db.collection("users")
         .doc(auth.currentUser.uid)
         .collection("buddies")
-        .add({
+        .doc(buddyid)
+        .set({
           bId : buddyid,
           bName : name
         })

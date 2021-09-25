@@ -19,20 +19,25 @@ const RecommendationsScreen = ({navigation}) => {
         if ( a.rating < b.rating ){return 1;}
         return 0;
       }
-
       useEffect(() => {
-        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('reviews').onSnapshot(snapshot => {
+        const subscriber = db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
             const reviews = [];
             snapshot.forEach(doc => {
-              reviews.push({
-                ...doc.data(),
-                key: doc.id,
-              });
-            });
-            reviews.sort(compareRating);
+                console.log(doc.id + "USER");
+                const reviewSub = db.collection('users').doc(doc.id).collection('reviews').onSnapshot(snapshotRev => {
+                    snapshotRev.forEach(docRev => {
+                        reviews.push({
+                            ...docRev.data(),
+                            key: docRev.id,
+                        });
+                        console.log(reviews)
+                    });
+                });
+            }); 
+            return () => reviewSub();
             setReviews(reviews);
             setLoading(false);
-          });
+        });
         return () => subscriber();
       }, []);
 

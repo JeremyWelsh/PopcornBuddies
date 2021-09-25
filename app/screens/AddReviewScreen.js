@@ -43,6 +43,8 @@ const AddReviewScreen = ({navigation}) => {
 
     const addReview = async () => {
       try {
+        //doc(contentId)
+        //.set
         if(contentId !=""){
         await db.collection("users")
         .doc(auth.currentUser.uid)
@@ -54,7 +56,8 @@ const AddReviewScreen = ({navigation}) => {
           type: type,
           rating: starRating,
           comment: comment,
-          poster: ppath
+          poster: ppath,
+          //reviewerName: auth.currentUser.displayName
         })
         alert("AYEEEEE");
       }else{

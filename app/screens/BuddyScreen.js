@@ -26,7 +26,7 @@ const BuddyScreen = ({navigation}) => {
     }
 */
     useEffect(() => {
-        const subscriber = db.collection('users').onSnapshot(snapshot => {
+      const buddySub = db.collection('users').doc(auth.currentUser.uid).collection('buddies').onSnapshot(snapshot => {
             const buddies = [];
             snapshot.forEach(doc => {
               buddies.push({
