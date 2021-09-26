@@ -34,7 +34,10 @@ const LoginScreen = ({ navigation }) => {
   //screen to be returned with email, password, login and register buttons
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies LoginScreen</Text>
+      <View style={styles.topView}>
+        <Text style={styles.logo}>Popcorn</Text>
+        <Text style={styles.logoB}>Buddies</Text>
+      </View>
       <StatusBar style="auto" />
       <View style={styles.inputView}>
         <Input
@@ -54,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <Button containerStyle={styles.button} title="Login" onPress={LogIn} />
       <Button
-        containerStyle={styles.button}
+        containerStyle={styles.buttonCA}
         title="Create Account"
         onPress={() => navigation.navigate("CreateAccount")}
       />
@@ -71,12 +74,38 @@ const styles = StyleSheet.create({
     marginTop: 5,
     backgroundColor: colours.theBlue,
   },
+  buttonCA: {
+    width: 350,
+    marginTop: 5,
+    backgroundColor: colours.orange,
+  },
   container: {
     flex: 1,
     backgroundColor: colours.bgColor,
     alignItems: "center",
     justifyContent: "center",
     padding: 15,
+    paddingTop:0,
+  },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "column",
+    paddingHorizontal:20,
+    paddingTop:7,
+    paddingBottom:7,
+    backgroundColor:colours.bgColor,
+    marginTop:0,
+    marginBottom:60,
+  },
+  logo: {
+    fontWeight: "bold",
+    fontSize: 60,
+    color: colours.theBlue,
+  },
+  logoB: {
+    fontWeight: "bold",
+    fontSize: 60,
+    color: colours.orange,
   },
 });
 

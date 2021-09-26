@@ -35,8 +35,10 @@ const CreateAccountScreen = ({ navigation }) => {
   // return the screen
   return (
     <View style={styles.container}>
-      <Text>Popcorn Buddies RegisterScreen</Text>
       <StatusBar style="auto" />
+      <View style={styles.topView}>
+        <Text style={styles.logo}>Create Account</Text>
+      </View>
       <View style={styles.inputView}>
         <Input
           placeholder="Name"
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   button: {
     width: 350,
     marginTop: 5,
-    backgroundColor: colours.theBlue,
+    backgroundColor: colours.orange,
   },
   container: {
     flex: 1,
@@ -83,6 +85,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 15,
+  },
+  topView:  {
+    justifyContent: "center",
+    flexDirection: "column",
+    paddingHorizontal:20,
+    paddingTop:7,
+    paddingBottom:7,
+    backgroundColor:colours.bgColor,
+    marginTop:0,
+    marginBottom:60,
+  },
+  logo: {
+    fontWeight: "bold",
+    fontSize: 40,
+    color: colours.orange,
   },
 });
 
