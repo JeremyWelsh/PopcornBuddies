@@ -59,9 +59,9 @@ const BuddyProfileScreen = ({route }) => {
     return (
       <View style={[styles.item]}>
         <View style={{ alignItems: "flex-start", flex: 1, paddingRight: 15 }}>
-          <Text style={styles.title}>Title: {item.cName}</Text>
+          <Text style={styles.title}>{item.cName}</Text>
           <Rating
-            imageSize={20}
+            imageSize={25}
             type="custom"
             readonly
             // rating is out of ten and there are 5 stars so the rating is halved
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontWeight: "bold",
-    fontSize: 27,
+    fontSize: 25,
   },
   extrainfo: {
-    fontSize: 15,
+    fontSize: 17,
   },
   topView:  {
     justifyContent: "center",

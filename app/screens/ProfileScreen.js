@@ -64,9 +64,9 @@ const ProfileScreen = ({ navigation }) => {
     return (
       <View style={[styles.item]}>
         <View style={{ alignItems: "flex-start", flex: 1, paddingRight: 15 }}>
-          <Text style={styles.title}>Title: {item.cName}</Text>
+          <Text style={styles.title}>{item.cName}</Text>
           <Rating
-            imageSize={20}
+            imageSize={25}
             type="custom"
             readonly
             //halved because ratings are out of 10
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     fontSize: 27,
   },
   extrainfo: {
-    fontSize: 15,
+    fontSize: 17,
   },
   topView:  {
     justifyContent: "center",
